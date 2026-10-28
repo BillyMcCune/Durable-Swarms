@@ -1,0 +1,10 @@
+{
+  "host": "127.0.0.1",
+  "port": 8080,
+  "database": "swarms.sqlite3",
+  "vms": {"vm-1": 2, "vm-2": 2},
+  "lease_seconds": 5,
+  "progress_timeout_seconds": 8,
+  "max_attempts": 3,
+  "tick_seconds": 0.2
+}

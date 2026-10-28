@@ -1,0 +1,26 @@
+{
+  "seed": 42,
+  "leader": {
+    "id": "leader",
+    "steps": [{"type": "compute", "seconds": 1}],
+    "result": "simulated coding workflow finished"
+  },
+  "workers": [
+    {
+      "id": "implement",
+      "steps": [
+        {"type": "compute", "seconds": [1, 2]},
+        {"type": "effect", "key": "patches_applied", "delta": 1},
+        {"type": "compute", "seconds": 1}
+      ],
+      "result": "patch ready"
+    },
+    {
+      "id": "review",
+      "depends_on": ["implement"],
+      "steps": [{"type": "compute", "seconds": 1}],
+      "result": "review complete"
+    }
+  ],
+  "faults": [{"worker": "implement", "attempt": 1, "step": 1, "kind": "effect_interruption"}]
+}
