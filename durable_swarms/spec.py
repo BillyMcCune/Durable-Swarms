@@ -11,6 +11,10 @@ FAULTS = {"worker_exit", "vm_loss", "stall", "retry_loop", "invalid_result", "ef
 # Return a normalized copy of a workflow, validating workers, steps, dependencies,
 # and fault targets. Seeded duration ranges are resolved without modifying the input;
 # invalid specifications raise ValueError before a workload is created.
+# Inputs:
+#   spec: Workflow dictionary with leader, optional workers, seed, and faults.
+# Output: Independent normalized dictionary with defaults and resolved durations;
+#         raises ValueError for invalid workflow definitions.
 def validate(spec):
     """Return a normalized spec. Seeded delays are independent of worker placement."""
     spec = copy.deepcopy(spec)
@@ -65,6 +69,9 @@ def validate(spec):
 
     # Traverse dependency edges, detecting cycles via the current recursion path.
     # Previously completed nodes are skipped so shared dependencies are visited once.
+    # Inputs:
+    #   node: Worker ID in the dependency graph captured from validate.
+    # Output: None; updates visiting/visited sets or raises ValueError for a cycle.
     def visit(node):
         if node in visiting:
             raise ValueError("subtask dependencies contain a cycle")

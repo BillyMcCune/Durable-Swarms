@@ -10,16 +10,25 @@ from durable_swarms.store import Store
 
 class Clock:
     # Start a controllable clock so lease tests do not depend on wall-clock sleeps.
+    # Inputs:
+    #   self: Clock instance being initialized.
+    # Output: None; sets the initial simulated time to 1000 seconds.
     def __init__(self):
         self.now = 1000
 
     # Supply the current simulated timestamp through the engine's clock interface.
+    # Inputs:
+    #   self: Clock instance holding the current simulated timestamp.
+    # Output: Numeric timestamp from self.now, in seconds.
     def __call__(self):
         return self.now
 
 
 class RecoveryTests(unittest.TestCase):
     # Create an isolated durable store, deterministic clock, and two registered VMs.
+    # Inputs:
+    #   self: RecoveryTests instance receiving the per-test fixtures.
+    # Output: None; initializes the temporary database, engine, clock, and sample spec.
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.clock = Clock()
@@ -31,23 +40,38 @@ class RecoveryTests(unittest.TestCase):
         self.engine.register({"vm_id": "b", "session": "b1"})
 
     # Close SQLite before removing this test's temporary database directory.
+    # Inputs:
+    #   self: RecoveryTests instance holding the open store and temporary directory.
+    # Output: None; releases the fixtures created by setUp.
     def tearDown(self):
         self.store.db.close()
         self.tmp.cleanup()
 
     # Submit and schedule a test workflow, returning the leader's assigned identity.
+    # Inputs:
+    #   self: RecoveryTests instance with a configured engine.
+    #   spec: Optional workflow specification; defaults to the fixture specification.
+    # Output: Identity dictionary with task_id, worker_id, attempt, vm_id, and session.
     def begin(self, spec=None):
         self.engine.submit({"task_id": "task", "spec": spec or self.spec})
         self.engine.tick()
         return self.identity("lead")
 
     # Build API credentials for the worker's current VM session and assignment attempt.
+    # Inputs:
+    #   self: RecoveryTests instance whose engine holds the "task" workload.
+    #   worker_id: Logical worker ID within that workload.
+    # Output: Identity dictionary with task_id, worker_id, attempt, vm_id, and session.
     def identity(self, worker_id):
         worker = self.engine.status("task")["workers"][worker_id]
         return {"task_id": "task", "worker_id": worker_id, "attempt": worker["attempt"], "vm_id": worker["vm_id"], "session": worker["session"]}
 
     # Recover after an effect commits but its step does not, proving the receipt is
     # reused on another VM and the original attempt can no longer apply effects.
+    # Inputs:
+    #   self: RecoveryTests instance with an isolated database and simulated clock.
+    # Output: None on success; raises AssertionError if replay duplicates an effect
+    #         or permits the superseded attempt to write.
     def test_effect_survives_worker_and_orchestrator_crash_without_duplication(self):
         old = self.begin()
         self.engine.start(old)
@@ -80,6 +104,9 @@ class RecoveryTests(unittest.TestCase):
         self.assertTrue(any(e["type"] == "recovery_completed" for e in events))
 
     # Confirm VM heartbeats cannot renew an absent worker or authorize its stale writes.
+    # Inputs:
+    #   self: RecoveryTests instance with registered VM fixtures.
+    # Output: None on success; raises AssertionError if an absent attempt stays valid.
     def test_dead_worker_not_renewed_by_healthy_vm(self):
         old = self.begin()
         self.clock.now += 4
@@ -91,6 +118,9 @@ class RecoveryTests(unittest.TestCase):
             self.engine.checkpoint({**old, "step": 0})
 
     # Confirm unchanged progress triggers recovery even when all leases keep renewing.
+    # Inputs:
+    #   self: RecoveryTests instance with an engine and controllable clock.
+    # Output: None on success; raises AssertionError if the stalled worker is not detected.
     def test_healthy_heartbeats_do_not_hide_stall(self):
         old = self.begin()
         self.engine.start(old)
@@ -103,6 +133,10 @@ class RecoveryTests(unittest.TestCase):
 
     # Exercise parent/child completion and leader-authorized retries using one slot,
     # proving that a waiting leader cannot block its own child's execution.
+    # Inputs:
+    #   self: RecoveryTests instance whose pool is reduced to a single slot in the test.
+    # Output: None on success; raises AssertionError if slot yielding, child recovery
+    #         authorization, or result collection fails.
     def test_one_slot_parent_wait_releases_capacity_and_controls_child_retry(self):
         self.config["vms"] = {"a": 1}
         self.engine = Engine(self.store, self.config, self.clock)
@@ -133,6 +167,9 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(self.engine.status("task")["status"], "completed")
 
     # Verify ready workers respect slot capacity while dependent work stays queued.
+    # Inputs:
+    #   self: RecoveryTests instance with two single-slot VMs.
+    # Output: None on success; raises AssertionError for premature or over-capacity placement.
     def test_dependency_and_slot_limits(self):
         spec = {"leader": {"id": "lead", "steps": []}, "workers": [
             {"id": "first", "steps": []}, {"id": "second", "depends_on": ["first"], "steps": []}]}
@@ -146,6 +183,9 @@ class RecoveryTests(unittest.TestCase):
         self.assertNotEqual(workers["lead"]["vm_id"], workers["first"]["vm_id"])
 
     # Distinguish invalid-result failure from escalation after repeated recoverable faults.
+    # Inputs:
+    #   self: RecoveryTests instance with its configured failed-attempt budget.
+    # Output: None on success; raises AssertionError if either terminal state is incorrect.
     def test_invalid_result_fails_and_repeated_failure_escalates(self):
         old = self.begin()
         self.engine.finish({**old, "result": "wrong"})
@@ -158,6 +198,9 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(self.engine.status("other")["status"], "escalated")
 
     # Verify VM recreation rejects the old session and permits a replacement attempt.
+    # Inputs:
+    #   self: RecoveryTests instance with a scheduled worker and registered VMs.
+    # Output: None on success; raises AssertionError if fencing or replacement fails.
     def test_recreate_fences_old_session(self):
         old = self.begin()
         self.engine.recreate({"vm_id": "a"})
@@ -168,6 +211,9 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(self.identity("lead")["attempt"], 2)
 
     # Reject effects without durable intent and checkpoints without durable receipts.
+    # Inputs:
+    #   self: RecoveryTests instance with the counter-effect workflow fixture.
+    # Output: None on success; raises AssertionError if either invalid operation succeeds.
     def test_effect_requires_intent_and_checkpoint_requires_receipt(self):
         identity = self.begin()
         with self.assertRaises(APIError):
@@ -178,6 +224,10 @@ class RecoveryTests(unittest.TestCase):
 
     # Verify task-ID reuse accepts only the same specification and log pagination
     # advances by sequence number without duplicating workload creation.
+    # Inputs:
+    #   self: RecoveryTests instance with an engine and durable event store.
+    # Output: None on success; raises AssertionError for conflicting ID reuse,
+    #         duplicate creation events, or incorrect pagination order.
     def test_submission_idempotency_and_event_pagination(self):
         self.begin()
         self.engine.submit({"task_id": "task", "spec": self.spec})
@@ -189,6 +239,10 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(sum(e["type"] == "workload_created" for e in self.store.events("task")), 1)
 
     # Check repeatable duration expansion without input mutation and reject cyclic tasks.
+    # Inputs:
+    #   self: RecoveryTests instance supplying a base workflow specification.
+    # Output: None on success; raises AssertionError if normalization is inconsistent,
+    #         mutates the input, or accepts a dependency cycle.
     def test_seeded_duration_and_dag_validation(self):
         spec = copy.deepcopy(self.spec)
         spec["leader"]["steps"][0]["seconds"] = [1, 2]

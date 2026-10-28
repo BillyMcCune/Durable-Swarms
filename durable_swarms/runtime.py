@@ -16,8 +16,15 @@ from .client import RemoteError, request
 
 
 # Run one assignment from its durable next-step cursor, reporting progress and
-# checkpointing effects only after receipt. Return 23 for a simulated worker exit,
-# 24 for VM loss, or 0 for normal completion/yield; request errors reach the caller.
+# checkpointing effects only after receipt. Inject scheduled faults during execution.
+# Inputs:
+#   url: Orchestrator base HTTP URL.
+#   job: Assignment dictionary containing task_id, worker checkpoint, and faults.
+#   vm_id: ID of the VM executing the assignment.
+#   session: Current VM session token used to fence requests.
+#   interval: Seconds between compute progress reports; defaults to 0.5.
+# Output: Exit code 0 for completion/yield or a handled terminal outcome, 23 for
+#         worker interruption, or 24 for VM loss; request exceptions propagate.
 def execute(url, job, vm_id, session, interval=0.5):
     worker = job["worker"]
     identity = {"task_id": job["task_id"], "worker_id": worker["id"], "attempt": worker["attempt"],
@@ -25,6 +32,10 @@ def execute(url, job, vm_id, session, interval=0.5):
     leader = worker["parent_id"] is None
 
     # Attach the assignment's fencing identity to each worker API request.
+    # Inputs:
+    #   name: Endpoint name without its leading slash.
+    #   **args: JSON request fields added to the captured worker identity.
+    # Output: Decoded API response; HTTP or connection failures propagate.
     def call(name, **args):
         return request(url, "/" + name, {**identity, **args})
 
@@ -73,6 +84,10 @@ def execute(url, job, vm_id, session, interval=0.5):
 
 # Read an assignment from stdin and convert execution outcomes to process exit codes.
 # Stale attempts stop quietly; other failures exit so their lease can expire.
+# Inputs:
+#   url: Orchestrator base HTTP URL; assignment JSON is read from stdin.
+# Output: Exit code from execute, 0 for a stale-attempt response, or 23 for an
+#         execution failure; malformed stdin raises before execution begins.
 def worker_main(url):
     payload = json.load(sys.stdin)
     try:
@@ -85,11 +100,20 @@ def worker_main(url):
         return 23
 
 
-# Register a VM daemon, renew leases for living subprocesses, and reconcile them
-# with current assignments. Lost sessions stop old workers before re-registration;
-# daemon shutdown also stops every subprocess it still owns.
+# Register a VM daemon and reconcile subprocesses with current assignments while
+# renewing their leases. Lost sessions and shutdown stop the daemon's owned workers.
+# Inputs:
+#   url: Orchestrator base HTTP URL.
+#   vm_id: VM identifier configured in the orchestrator's fixed pool.
+#   interval: Seconds between daemon polls and worker progress reports; default 0.5.
+# Output: Exit code 0 on interruption or 24 for simulated VM loss; otherwise runs
+#         continuously, retrying connection failures and changed sessions.
 def run_vm(url, vm_id, interval=0.5):
     # Route SIGTERM through the same finally-block cleanup used for Ctrl-C.
+    # Inputs:
+    #   signum: Received signal number, supplied by Python's signal handler.
+    #   frame: Interrupted execution frame; unused.
+    # Output: Does not return; raises KeyboardInterrupt to trigger daemon cleanup.
     def terminate(signum, frame):
         raise KeyboardInterrupt
 
@@ -99,6 +123,9 @@ def run_vm(url, vm_id, interval=0.5):
     seen = set()
 
     # Terminate and reap one owned worker, escalating to SIGKILL if it will not exit.
+    # Inputs:
+    #   process: subprocess.Popen instance for the owned worker.
+    # Output: None; leaves an already-exited process alone or waits for its termination.
     def stop_process(process):
         if process.poll() is None:
             process.terminate()

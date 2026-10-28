@@ -15,6 +15,11 @@ ACTIVE = {"assigned", "running"}
 
 class APIError(Exception):
     # Carry an API error message and HTTP status to the transport layer.
+    # Inputs:
+    #   self: APIError instance being initialized.
+    #   message: Human-readable error description.
+    #   code: HTTP status code; defaults to 409.
+    # Output: None; initializes the exception message and code attribute.
     def __init__(self, message, code=409):
         super().__init__(message)
         self.code = code
@@ -23,6 +28,12 @@ class APIError(Exception):
 class Engine:
     # Configure the fixed VM pool and recovery policy, rejecting invalid capacities
     # or timeouts. The injected clock lets recovery checks advance time explicitly.
+    # Inputs:
+    #   self: Engine instance being initialized.
+    #   store: Store holding durable state and transactions.
+    #   config: Dictionary with vms and optional lease/progress timeouts and retry policy.
+    #   clock: Callable returning seconds; defaults to time.time.
+    # Output: None; initializes the engine or raises ValueError for invalid settings.
     def __init__(self, store, config, clock=time.time):
         self.store, self.config, self.clock = store, config, clock
         self.pool = config["vms"]
@@ -36,6 +47,10 @@ class Engine:
 
     # Load the workload projection or raise HTTP 404 if it does not exist.
     # Callers hold the store transaction while reading or changing this state.
+    # Inputs:
+    #   self: Engine whose store supplies the workload.
+    #   task_id: Workload identifier string.
+    # Output: Workload dictionary; raises APIError(404) when absent.
     def task(self, task_id):
         task = self.store.get("workloads", task_id)
         if task is None:
@@ -44,6 +59,10 @@ class Engine:
 
     # Return the registered VM only if the request's session matches its live lease.
     # An expired or replaced session receives HTTP 409 and cannot authorize writes.
+    # Inputs:
+    #   self: Engine providing stored sessions and the current time.
+    #   body: Request dictionary containing vm_id and session.
+    # Output: VM dictionary; raises APIError(409) for an invalid or expired session.
     def vm(self, body):
         vm = self.store.get("vms", body.get("vm_id"))
         if not vm or vm["session"] != body.get("session") or vm["expires"] <= self.clock():
@@ -52,6 +71,10 @@ class Engine:
 
     # Resolve a request to its workload and active worker attempt, checking both
     # VM and worker leases. Reject stale attempts before they can change state.
+    # Inputs:
+    #   self: Engine providing workload state and lease validation.
+    #   body: Request dictionary with task_id, worker_id, attempt, vm_id, and session.
+    # Output: (workload, worker) dictionaries; raises APIError for invalid identities.
     def worker(self, body):
         self.vm(body)
         task = self.task(body.get("task_id"))
@@ -63,15 +86,31 @@ class Engine:
         return task, worker
 
     # Append an event using the orchestrator clock within the caller's transaction.
+    # Inputs:
+    #   self: Engine providing the store and clock.
+    #   task: Mutable workload dictionary whose version is advanced.
+    #   kind: Event type string.
+    #   worker: Optional worker dictionary supplying attempt and parent context.
+    #   **payload: Event-specific JSON-serializable fields.
+    # Output: None; appends an event in the open transaction.
     def event(self, task, kind, worker=None, **payload):
         self.store.event(task, kind, self.clock(), worker, **payload)
 
     # Save a recovery snapshot and its projection within the caller's transaction.
+    # Inputs:
+    #   self: Engine providing the store and clock.
+    #   task: Mutable workload dictionary to checkpoint.
+    # Output: None; advances the version and writes the snapshot and projection.
     def save(self, task):
         self.store.save(task, self.clock())
 
     # Build an unassigned worker record at step zero; parent identifies a subtask.
     # The caller adds this record to a workload and persists it.
+    # Inputs:
+    #   self: Engine providing the initial timestamps.
+    #   node: Normalized worker specification with id, steps, dependencies, and result.
+    #   parent: Parent worker ID, or None for a leader.
+    # Output: New queued worker dictionary; does not persist it.
     def new_worker(self, node, parent=None):
         return {"id": node["id"], "parent_id": parent, "node": node, "state": "queued",
                 "attempt": 0, "next_step": 0, "progress": 0, "last_progress": self.clock(),
@@ -80,6 +119,10 @@ class Engine:
 
     # Validate and durably create a workload with its queued leader, returning its ID.
     # Reusing an ID is idempotent only when the normalized specification matches.
+    # Inputs:
+    #   self: Engine owning submission and durable storage.
+    #   body: Dictionary with spec and optional task_id for idempotent submission.
+    # Output: {"task_id": str}; rejects invalid specs or conflicting existing IDs.
     def submit(self, body):
         spec = validate(body["spec"])
         task_id = body.get("task_id") or str(uuid.uuid4())
@@ -100,6 +143,10 @@ class Engine:
 
     # Register a configured VM session and its slot capacity. Replacing an expired
     # session initiates recovery; a competing live session is rejected.
+    # Inputs:
+    #   self: Engine providing the configured pool and lease duration.
+    #   body: Dictionary with configured vm_id and nonempty session string.
+    # Output: VM dictionary with id, session, slots, and expires.
     def register(self, body):
         vm_id, session = body["vm_id"], body["session"]
         if vm_id not in self.pool or not isinstance(session, str) or not session:
@@ -116,6 +163,11 @@ class Engine:
 
     # Renew a live VM lease and the unexpired worker attempts it reports as alive.
     # Missing or expired attempts are not revived by VM health alone.
+    # Inputs:
+    #   self: Engine owning VM and worker leases.
+    #   body: Dictionary with vm_id, session, and optional active list of
+    #         {task_id, worker_id, attempt} records; active defaults to an empty list.
+    # Output: {"ok": True}; persists valid lease renewals.
     def heartbeat(self, body):
         with self.store.transaction():
             vm = self.vm(body)
@@ -138,6 +190,12 @@ class Engine:
 
     # Set a workload's terminal outcome and fence every unfinished worker.
     # The caller must save the changed workload in its current transaction.
+    # Inputs:
+    #   self: Engine recording the terminal event.
+    #   task: Mutable workload dictionary to terminate.
+    #   status: Terminal status selected by the caller, such as failed or escalated.
+    #   reason: Human-readable explanation for the terminal outcome.
+    # Output: None; mutates task and records its terminal event without saving it.
     def terminate(self, task, status, reason):
         task["status"], task["reason"] = status, reason
         for worker in task["workers"].values():
@@ -145,9 +203,15 @@ class Engine:
                 worker["state"] = "superseded"
         self.event(task, "workload_" + status, reason=reason)
 
-    # Supersede an active attempt while preserving its next-step checkpoint.
-    # Leaders queue directly; children await leader authorization. Exhausting the
-    # failure budget escalates the workload. The caller persists these changes.
+    # Supersede an active attempt while preserving its checkpoint: leaders queue
+    # directly, children await authorization, and exhausted budgets cause escalation.
+    # The caller persists these changes.
+    # Inputs:
+    #   self: Engine providing the failed-attempt budget and event store.
+    #   task: Mutable workload dictionary containing the worker.
+    #   worker: Mutable worker dictionary for the failed attempt.
+    #   reason: Human-readable failure explanation.
+    # Output: None; updates recovery state, or does nothing for an inactive attempt.
     def recover(self, task, worker, reason):
         if task["status"] in TERMINAL or worker["state"] not in ACTIVE:
             return
@@ -168,6 +232,11 @@ class Engine:
 
     # Initiate recovery for active attempts on a lost VM and save affected workloads.
     # Runs inside the registration or recreation transaction that invalidates the VM.
+    # Inputs:
+    #   self: Engine providing workload records and recovery policy.
+    #   vm_id: Identifier of the VM whose active attempts must be recovered.
+    #   reason: Explanation attached to each affected attempt.
+    # Output: None; saves all affected workloads in the caller's transaction.
     def lose_vm(self, vm_id, reason):
         for task in self.store.all("workloads"):
             changed = False
@@ -180,6 +249,10 @@ class Engine:
 
     # Fence a VM's workers and retire its session so the daemon can register again.
     # This resets the worker service's registration; it does not boot a physical VM.
+    # Inputs:
+    #   self: Engine managing VM registration and worker recovery.
+    #   body: Dictionary containing the vm_id to reset.
+    # Output: {"ok": True, "action": str} describing the required service/VM restart.
     def recreate(self, body):
         # Reset the worker service lease; the daemon will register a fresh session.
         with self.store.transaction():
@@ -193,6 +266,10 @@ class Engine:
 
     # Let a live leader create its declared subtasks, authorize child retries, and
     # collect completed child results. Repeated calls do not duplicate children.
+    # Inputs:
+    #   self: Engine managing the workload's child workers.
+    #   body: Leader identity with task_id, worker_id, attempt, vm_id, and session.
+    # Output: {"results": {child_id: result}} for completed children.
     def manage(self, body):
         with self.store.transaction():
             task, leader = self.worker(body)
@@ -218,6 +295,9 @@ class Engine:
     # Atomically detect lost/stalled workers, wake waiting leaders, and assign ready
     # work within live VM capacities. Placement favors a different VM after failure;
     # every assignment increments the attempt ID used to reject stale requests.
+    # Inputs:
+    #   self: Engine containing pool configuration, clock, leases, and workload state.
+    # Output: None; commits recovery transitions and newly assigned worker attempts.
     def tick(self):
         with self.store.transaction():
             now = self.clock()
@@ -278,6 +358,10 @@ class Engine:
 
     # Return this VM session's live assignments, including resume state and faults.
     # Polling reads assignments without claiming new work or renewing leases.
+    # Inputs:
+    #   self: Engine supplying active workload assignments.
+    #   body: Dictionary with vm_id and session identifying the polling daemon.
+    # Output: {"jobs": [{"task_id": str, "worker": dict, "faults": list}, ...]}.
     def poll(self, body):
         with self.store.transaction():
             vm = self.vm(body)
@@ -291,6 +375,10 @@ class Engine:
 
     # Acknowledge an assignment as running and record a recovery restart if needed.
     # Repeated acknowledgments of the same running attempt do not add start events.
+    # Inputs:
+    #   self: Engine managing worker lifecycle events.
+    #   body: Worker identity with task_id, worker_id, attempt, vm_id, and session.
+    # Output: {"ok": True}; records the start transition when still assigned.
     def start(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -306,6 +394,11 @@ class Engine:
 
     # Record strictly advancing progress for the current incomplete step.
     # Repeated or lower values do not reset the stall-detection timer.
+    # Inputs:
+    #   self: Engine tracking durable worker progress and timestamps.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session),
+    #         current step index, and a nonnegative integer progress value.
+    # Output: {"ok": True}; persists only progress that exceeds the prior value.
     def progress(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -320,6 +413,12 @@ class Engine:
 
     # Validate an effect step and return its stable operation ID and counter payload.
     # The ID excludes attempt and VM identity so recovery can reuse the same receipt.
+    # Inputs:
+    #   self: Engine instance; this helper does not access its stored state.
+    #   task: Workload dictionary supplying its logical ID.
+    #   worker: Worker dictionary supplying its ID and step definitions.
+    #   step: Zero-based integer index of an effect step.
+    # Output: (operation_id, {"key": str, "delta": int}); rejects invalid steps.
     def operation(self, task, worker, step):
         if type(step) is not int or not 0 <= step < len(worker["node"]["steps"]):
             raise APIError("invalid step")
@@ -331,6 +430,11 @@ class Engine:
 
     # Persist intent for the next effect step before it may be applied.
     # Repeated requests return the same operation ID without duplicating the intent.
+    # Inputs:
+    #   self: Engine owning the durable intent log.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session)
+    #         and the next effect step index in step.
+    # Output: {"operation_id": str}; returned only after the intent transaction commits.
     def intent(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -347,6 +451,12 @@ class Engine:
     # Apply an intended counter mutation and commit its receipt atomically, or return
     # the existing receipt on retry. Conflicting or missing completed-step receipts
     # escalate the workload rather than risk applying an effect again.
+    # Inputs:
+    #   self: Engine owning the counter world and effect receipt registry.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session)
+    #         and effect step index in step; an intent must already exist.
+    # Output: Receipt {"operation_id": str, "key": str, "value": int}, or
+    #         {"escalated": True} if durable effect records are inconsistent.
     def effect(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -375,6 +485,11 @@ class Engine:
 
     # Advance the durable cursor only after the next step completes; effect steps
     # require a stored receipt. Retrying an already checkpointed step is a no-op.
+    # Inputs:
+    #   self: Engine owning the worker's durable cursor and results.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session)
+    #         and the completed step index in step.
+    # Output: {"next_step": int}, the durable cursor after the request.
     def checkpoint(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -398,9 +513,14 @@ class Engine:
             self.save(task)
         return {"next_step": step + 1}
 
-    # Validate a worker's final result and mark completion. A leader releases its
-    # slot while children remain unfinished, then aggregates their final results.
-    # Premature or unexpected results fail the workload.
+    # Validate completion, failing the workload for premature or unexpected results.
+    # A leader releases its slot while children remain unfinished, then aggregates
+    # their final results.
+    # Inputs:
+    #   self: Engine managing completion and parent/child results.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session)
+    #         and result matching the worker's declared result.
+    # Output: {"state": "completed" | "waiting" | "failed"}.
     def finish(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -426,6 +546,11 @@ class Engine:
         return {"state": "completed"}
 
     # Record a live worker's failure report and initiate recovery in one transaction.
+    # Inputs:
+    #   self: Engine providing failure logging and recovery policy.
+    #   body: Worker identity (task_id, worker_id, attempt, vm_id, session)
+    #         and optional reason string, defaulting to "worker failure".
+    # Output: {"ok": True}; commits the failure report and recovery/escalation state.
     def fail(self, body):
         with self.store.transaction():
             task, worker = self.worker(body)
@@ -437,6 +562,10 @@ class Engine:
 
     # Handle an operator stop by fencing the selected active attempt and recovering
     # its work. The VM daemon observes the revoked assignment and stops the process.
+    # Inputs:
+    #   self: Engine owning workload and worker state.
+    #   body: Dictionary containing task_id and worker_id; no worker lease is required.
+    # Output: {"ok": True}; initiates recovery only when the selected attempt is active.
     def stop(self, body):
         with self.store.transaction():
             task = self.task(body["task_id"])
@@ -449,6 +578,10 @@ class Engine:
 
     # Return a consistent workload snapshot enriched with its simulated counter values.
     # Adding the effects view does not change the stored workload projection.
+    # Inputs:
+    #   self: Engine providing workload projections and simulated counter values.
+    #   task_id: Identifier of the workload to inspect.
+    # Output: Workload dictionary augmented with effects mapping counter keys to values.
     def status(self, task_id):
         with self.store.transaction():
             task = self.task(task_id)

@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 class RuntimeTests(unittest.TestCase):
     # Start an isolated HTTP orchestrator and two VM daemons, registering cleanup
     # before launch so partially completed setup still releases owned resources.
+    # Inputs:
+    #   self: RuntimeTests instance receiving the local service fixtures.
+    # Output: None; creates temporary configuration/logs and waits for service readiness.
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -44,6 +47,10 @@ class RuntimeTests(unittest.TestCase):
         self.wait_for(lambda: len(request(self.url, "/vms")) == 2, 10)
 
     # Launch a tracked service in its own process group with shared diagnostic output.
+    # Inputs:
+    #   self: RuntimeTests instance holding the process list and output stream.
+    #   *args: Command-line arguments following "python -m durable_swarms".
+    # Output: subprocess.Popen instance, also recorded for test cleanup.
     def start(self, *args):
         process = subprocess.Popen([sys.executable, "-m", "durable_swarms", *args], cwd=ROOT,
                                    stdout=self.output, stderr=self.output, start_new_session=True)
@@ -52,6 +59,9 @@ class RuntimeTests(unittest.TestCase):
 
     # Terminate owned process groups and reap their services, force-killing stragglers.
     # Skip services already reaped so their former process groups are not signaled.
+    # Inputs:
+    #   self: RuntimeTests instance holding the owned service process list.
+    # Output: None; signals live process groups and waits for tracked processes to exit.
     def cleanup_processes(self):
         for process in reversed(self.processes):
             if process.poll() is not None:
@@ -69,6 +79,11 @@ class RuntimeTests(unittest.TestCase):
 
     # Poll until a condition is truthy, tolerating transient connection failures.
     # On timeout, fail with the last exception and captured service logs.
+    # Inputs:
+    #   self: RuntimeTests instance providing assertion handling and diagnostic logs.
+    #   fn: Zero-argument callable returning a truthy value when the condition is met.
+    #   timeout: Maximum polling duration in seconds; defaults to 20.
+    # Output: First truthy value returned by fn; raises AssertionError on timeout.
     def wait_for(self, fn, timeout=20):
         deadline = time.monotonic() + timeout
         last_error = None
@@ -85,11 +100,19 @@ class RuntimeTests(unittest.TestCase):
         self.fail(f"condition timed out ({last_error})\n{self.output.read()[-6000:]}")
 
     # Fetch a test workload's current state through the public HTTP API.
+    # Inputs:
+    #   self: RuntimeTests instance holding the test orchestrator URL.
+    #   task: Workload ID used in the test.
+    # Output: Decoded workload status dictionary from GET /status.
     def status(self, task):
         return request(self.url, "/status?task_id=" + task)
 
     # Run every modeled fault alongside a dependent workflow over real HTTP/processes.
     # Verify terminal results, single effect application, and migration after VM loss.
+    # Inputs:
+    #   self: RuntimeTests instance with a running orchestrator and two VM daemons.
+    # Output: None on success; raises AssertionError for incorrect recovery/results,
+    #         duplicate effects, missing VM migration, or completion timeout.
     def test_all_faults_with_concurrent_workloads_and_dependency_results(self):
         faults = ["worker_exit", "vm_loss", "stall", "retry_loop", "invalid_result", "effect_interruption"]
         for kind in faults:
@@ -117,6 +140,10 @@ class RuntimeTests(unittest.TestCase):
 
     # Kill and restart the orchestrator after a durable effect checkpoint, then prove
     # the workload completes without reapplying or re-checkpointing that finished step.
+    # Inputs:
+    #   self: RuntimeTests instance with running services and a persistent test database.
+    # Output: None on success; raises AssertionError if restart loses progress,
+    #         duplicates the effect/checkpoint, or fails to complete in time.
     def test_orchestrator_process_restart_preserves_completed_steps(self):
         spec = {"leader": {"id": "lead", "steps": [
             {"type": "effect", "key": "writes", "delta": 1}, {"type": "compute", "seconds": 2}]}}

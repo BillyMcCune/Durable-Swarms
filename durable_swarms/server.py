@@ -13,6 +13,10 @@ from .store import Store
 
 # Acquire exclusive database ownership, rebuild workload state, and run the HTTP
 # server with its scheduler thread. Shut down the thread and release the lock on exit.
+# Inputs:
+#   config: Dictionary of database path, HTTP host/port, VM capacities, and timeouts.
+# Output: None after shutdown; serves HTTP requests until interrupted and exits
+#         with SystemExit if another orchestrator already holds the database lock.
 def serve(config):
     path = config.get("database", "swarms.sqlite3")
     # Prevent two independently configured orchestrators from sharing the same database.
@@ -29,11 +33,21 @@ def serve(config):
 
     class Handler(BaseHTTPRequestHandler):
         # Keep routine HTTP access logs at debug level to avoid noisy worker polling.
+        # Inputs:
+        #   self: HTTP request handler instance.
+        #   fmt: Logging format string.
+        #   *args: Values substituted into the format string.
+        # Output: None; emits a debug log entry.
         def log_message(self, fmt, *args):
             logging.debug(fmt, *args)
 
         # Serialize a JSON response with its status and byte length. A disconnected
         # client does not undo a request that has already committed successfully.
+        # Inputs:
+        #   self: HTTP handler with the client's writable response stream.
+        #   code: HTTP response status integer.
+        #   body: JSON-serializable response object.
+        # Output: None; writes HTTP headers and JSON bytes to the client connection.
         def respond(self, code, body):
             data = json.dumps(body, allow_nan=False).encode()
             self.send_response(code)
@@ -47,6 +61,10 @@ def serve(config):
 
         # Dispatch read endpoints or JSON commands to the engine, translating known
         # API/validation errors into HTTP responses and unexpected failures into 503.
+        # Inputs:
+        #   self: HTTP handler containing the request method, path, headers, and body;
+        #         engine and store are captured from serve.
+        # Output: None; sends a JSON success or error response over HTTP.
         def handle_request(self):
             url = urlparse(self.path)
             query = parse_qs(url.query)
@@ -96,6 +114,8 @@ def serve(config):
 
     # Run scheduling and failure detection periodically until shutdown is requested.
     # Log a failed tick and retry on the next interval rather than losing monitoring.
+    # Inputs: No arguments; captures stop, config, and engine from serve.
+    # Output: None when the stop event is set; runs scheduler ticks until then.
     def monitor():
         while not stop.wait(config.get("tick_seconds", 0.2)):
             try:

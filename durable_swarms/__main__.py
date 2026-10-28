@@ -9,6 +9,10 @@ from .client import RemoteError, request
 
 # Parse the CLI and dispatch to a long-running service or a single API request.
 # Client commands print JSON; service and worker commands return their exit status.
+# Inputs: No arguments; reads command-line arguments from sys.argv and any selected
+#         configuration/specification file (or assignment stdin for worker mode).
+# Output: Integer exit status, normally 0; prints client results as JSON or runs the
+#         selected service. Argument errors raise SystemExit through argparse.
 def main():
     parser = argparse.ArgumentParser(description="Durable workflow simulations")
     sub = parser.add_subparsers(dest="command", required=True)
