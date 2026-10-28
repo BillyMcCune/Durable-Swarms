@@ -15,12 +15,16 @@ import uuid
 from .client import RemoteError, request
 
 
+# Run one assignment from its durable next-step cursor, reporting progress and
+# checkpointing effects only after receipt. Return 23 for a simulated worker exit,
+# 24 for VM loss, or 0 for normal completion/yield; request errors reach the caller.
 def execute(url, job, vm_id, session, interval=0.5):
     worker = job["worker"]
     identity = {"task_id": job["task_id"], "worker_id": worker["id"], "attempt": worker["attempt"],
                 "vm_id": vm_id, "session": session}
     leader = worker["parent_id"] is None
 
+    # Attach the assignment's fencing identity to each worker API request.
     def call(name, **args):
         return request(url, "/" + name, {**identity, **args})
 
@@ -67,6 +71,8 @@ def execute(url, job, vm_id, session, interval=0.5):
     return 0
 
 
+# Read an assignment from stdin and convert execution outcomes to process exit codes.
+# Stale attempts stop quietly; other failures exit so their lease can expire.
 def worker_main(url):
     payload = json.load(sys.stdin)
     try:
@@ -79,7 +85,11 @@ def worker_main(url):
         return 23
 
 
+# Register a VM daemon, renew leases for living subprocesses, and reconcile them
+# with current assignments. Lost sessions stop old workers before re-registration;
+# daemon shutdown also stops every subprocess it still owns.
 def run_vm(url, vm_id, interval=0.5):
+    # Route SIGTERM through the same finally-block cleanup used for Ctrl-C.
     def terminate(signum, frame):
         raise KeyboardInterrupt
 
@@ -88,6 +98,7 @@ def run_vm(url, vm_id, interval=0.5):
     jobs = {}  # key -> (process, job)
     seen = set()
 
+    # Terminate and reap one owned worker, escalating to SIGKILL if it will not exit.
     def stop_process(process):
         if process.poll() is None:
             process.terminate()

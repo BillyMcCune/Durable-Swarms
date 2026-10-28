@@ -7,6 +7,8 @@ from urllib.parse import urlencode
 from .client import RemoteError, request
 
 
+# Parse the CLI and dispatch to a long-running service or a single API request.
+# Client commands print JSON; service and worker commands return their exit status.
 def main():
     parser = argparse.ArgumentParser(description="Durable workflow simulations")
     sub = parser.add_subparsers(dest="command", required=True)

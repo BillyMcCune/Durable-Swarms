@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class RuntimeTests(unittest.TestCase):
+    # Start an isolated HTTP orchestrator and two VM daemons, registering cleanup
+    # before launch so partially completed setup still releases owned resources.
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -41,12 +43,15 @@ class RuntimeTests(unittest.TestCase):
             self.start("vm", "--id", vm, "--url", self.url, "--interval", "0.1")
         self.wait_for(lambda: len(request(self.url, "/vms")) == 2, 10)
 
+    # Launch a tracked service in its own process group with shared diagnostic output.
     def start(self, *args):
         process = subprocess.Popen([sys.executable, "-m", "durable_swarms", *args], cwd=ROOT,
                                    stdout=self.output, stderr=self.output, start_new_session=True)
         self.processes.append(process)
         return process
 
+    # Terminate owned process groups and reap their services, force-killing stragglers.
+    # Skip services already reaped so their former process groups are not signaled.
     def cleanup_processes(self):
         for process in reversed(self.processes):
             if process.poll() is not None:
@@ -62,6 +67,8 @@ class RuntimeTests(unittest.TestCase):
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait()
 
+    # Poll until a condition is truthy, tolerating transient connection failures.
+    # On timeout, fail with the last exception and captured service logs.
     def wait_for(self, fn, timeout=20):
         deadline = time.monotonic() + timeout
         last_error = None
@@ -77,9 +84,12 @@ class RuntimeTests(unittest.TestCase):
         self.output.seek(0)
         self.fail(f"condition timed out ({last_error})\n{self.output.read()[-6000:]}")
 
+    # Fetch a test workload's current state through the public HTTP API.
     def status(self, task):
         return request(self.url, "/status?task_id=" + task)
 
+    # Run every modeled fault alongside a dependent workflow over real HTTP/processes.
+    # Verify terminal results, single effect application, and migration after VM loss.
     def test_all_faults_with_concurrent_workloads_and_dependency_results(self):
         faults = ["worker_exit", "vm_loss", "stall", "retry_loop", "invalid_result", "effect_interruption"]
         for kind in faults:
@@ -105,6 +115,8 @@ class RuntimeTests(unittest.TestCase):
         placements = [e["payload"]["vm_id"] for e in events if e["type"] == "worker_assigned"]
         self.assertGreaterEqual(len(set(placements)), 2)
 
+    # Kill and restart the orchestrator after a durable effect checkpoint, then prove
+    # the workload completes without reapplying or re-checkpointing that finished step.
     def test_orchestrator_process_restart_preserves_completed_steps(self):
         spec = {"leader": {"id": "lead", "steps": [
             {"type": "effect", "key": "writes", "delta": 1}, {"type": "compute", "seconds": 2}]}}

@@ -11,6 +11,8 @@ from .engine import APIError, Engine
 from .store import Store
 
 
+# Acquire exclusive database ownership, rebuild workload state, and run the HTTP
+# server with its scheduler thread. Shut down the thread and release the lock on exit.
 def serve(config):
     path = config.get("database", "swarms.sqlite3")
     # Prevent two independently configured orchestrators from sharing the same database.
@@ -26,9 +28,12 @@ def serve(config):
     stop = threading.Event()
 
     class Handler(BaseHTTPRequestHandler):
+        # Keep routine HTTP access logs at debug level to avoid noisy worker polling.
         def log_message(self, fmt, *args):
             logging.debug(fmt, *args)
 
+        # Serialize a JSON response with its status and byte length. A disconnected
+        # client does not undo a request that has already committed successfully.
         def respond(self, code, body):
             data = json.dumps(body, allow_nan=False).encode()
             self.send_response(code)
@@ -40,6 +45,8 @@ def serve(config):
             except (BrokenPipeError, ConnectionResetError):
                 pass
 
+        # Dispatch read endpoints or JSON commands to the engine, translating known
+        # API/validation errors into HTTP responses and unexpected failures into 503.
         def handle_request(self):
             url = urlparse(self.path)
             query = parse_qs(url.query)
@@ -87,6 +94,8 @@ def serve(config):
     server = ThreadingHTTPServer((config.get("host", "127.0.0.1"), config.get("port", 8080)), Handler)
     server.daemon_threads = True
 
+    # Run scheduling and failure detection periodically until shutdown is requested.
+    # Log a failed tick and retry on the next interval rather than losing monitoring.
     def monitor():
         while not stop.wait(config.get("tick_seconds", 0.2)):
             try:

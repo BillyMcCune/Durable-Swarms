@@ -9,14 +9,17 @@ from durable_swarms.store import Store
 
 
 class Clock:
+    # Start a controllable clock so lease tests do not depend on wall-clock sleeps.
     def __init__(self):
         self.now = 1000
 
+    # Supply the current simulated timestamp through the engine's clock interface.
     def __call__(self):
         return self.now
 
 
 class RecoveryTests(unittest.TestCase):
+    # Create an isolated durable store, deterministic clock, and two registered VMs.
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.clock = Clock()
@@ -27,19 +30,24 @@ class RecoveryTests(unittest.TestCase):
         self.engine.register({"vm_id": "a", "session": "a1"})
         self.engine.register({"vm_id": "b", "session": "b1"})
 
+    # Close SQLite before removing this test's temporary database directory.
     def tearDown(self):
         self.store.db.close()
         self.tmp.cleanup()
 
+    # Submit and schedule a test workflow, returning the leader's assigned identity.
     def begin(self, spec=None):
         self.engine.submit({"task_id": "task", "spec": spec or self.spec})
         self.engine.tick()
         return self.identity("lead")
 
+    # Build API credentials for the worker's current VM session and assignment attempt.
     def identity(self, worker_id):
         worker = self.engine.status("task")["workers"][worker_id]
         return {"task_id": "task", "worker_id": worker_id, "attempt": worker["attempt"], "vm_id": worker["vm_id"], "session": worker["session"]}
 
+    # Recover after an effect commits but its step does not, proving the receipt is
+    # reused on another VM and the original attempt can no longer apply effects.
     def test_effect_survives_worker_and_orchestrator_crash_without_duplication(self):
         old = self.begin()
         self.engine.start(old)
@@ -71,6 +79,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(sum(e["type"] == "effect_completed" for e in events), 1)
         self.assertTrue(any(e["type"] == "recovery_completed" for e in events))
 
+    # Confirm VM heartbeats cannot renew an absent worker or authorize its stale writes.
     def test_dead_worker_not_renewed_by_healthy_vm(self):
         old = self.begin()
         self.clock.now += 4
@@ -81,6 +90,7 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaises(APIError):
             self.engine.checkpoint({**old, "step": 0})
 
+    # Confirm unchanged progress triggers recovery even when all leases keep renewing.
     def test_healthy_heartbeats_do_not_hide_stall(self):
         old = self.begin()
         self.engine.start(old)
@@ -91,6 +101,8 @@ class RecoveryTests(unittest.TestCase):
         self.engine.tick()
         self.assertEqual(self.engine.status("task")["workers"]["lead"]["recovery_reason"], "worker made no progress")
 
+    # Exercise parent/child completion and leader-authorized retries using one slot,
+    # proving that a waiting leader cannot block its own child's execution.
     def test_one_slot_parent_wait_releases_capacity_and_controls_child_retry(self):
         self.config["vms"] = {"a": 1}
         self.engine = Engine(self.store, self.config, self.clock)
@@ -120,6 +132,7 @@ class RecoveryTests(unittest.TestCase):
         self.engine.finish({**leader, "result": "lead complete"})
         self.assertEqual(self.engine.status("task")["status"], "completed")
 
+    # Verify ready workers respect slot capacity while dependent work stays queued.
     def test_dependency_and_slot_limits(self):
         spec = {"leader": {"id": "lead", "steps": []}, "workers": [
             {"id": "first", "steps": []}, {"id": "second", "depends_on": ["first"], "steps": []}]}
@@ -132,6 +145,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(workers["second"]["state"], "queued")
         self.assertNotEqual(workers["lead"]["vm_id"], workers["first"]["vm_id"])
 
+    # Distinguish invalid-result failure from escalation after repeated recoverable faults.
     def test_invalid_result_fails_and_repeated_failure_escalates(self):
         old = self.begin()
         self.engine.finish({**old, "result": "wrong"})
@@ -143,6 +157,7 @@ class RecoveryTests(unittest.TestCase):
             self.engine.fail({"task_id": "other", "worker_id": "lead", "attempt": worker["attempt"], "vm_id": worker["vm_id"], "session": worker["session"]})
         self.assertEqual(self.engine.status("other")["status"], "escalated")
 
+    # Verify VM recreation rejects the old session and permits a replacement attempt.
     def test_recreate_fences_old_session(self):
         old = self.begin()
         self.engine.recreate({"vm_id": "a"})
@@ -152,6 +167,7 @@ class RecoveryTests(unittest.TestCase):
         self.engine.tick()
         self.assertEqual(self.identity("lead")["attempt"], 2)
 
+    # Reject effects without durable intent and checkpoints without durable receipts.
     def test_effect_requires_intent_and_checkpoint_requires_receipt(self):
         identity = self.begin()
         with self.assertRaises(APIError):
@@ -160,6 +176,8 @@ class RecoveryTests(unittest.TestCase):
             self.engine.checkpoint({**identity, "step": 0})
         self.assertEqual(self.engine.status("task")["effects"], {})
 
+    # Verify task-ID reuse accepts only the same specification and log pagination
+    # advances by sequence number without duplicating workload creation.
     def test_submission_idempotency_and_event_pagination(self):
         self.begin()
         self.engine.submit({"task_id": "task", "spec": self.spec})
@@ -170,6 +188,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertGreater(second[0]["seq"], first[0]["seq"])
         self.assertEqual(sum(e["type"] == "workload_created" for e in self.store.events("task")), 1)
 
+    # Check repeatable duration expansion without input mutation and reject cyclic tasks.
     def test_seeded_duration_and_dag_validation(self):
         spec = copy.deepcopy(self.spec)
         spec["leader"]["steps"][0]["seconds"] = [1, 2]
