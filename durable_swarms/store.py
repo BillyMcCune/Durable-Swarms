@@ -28,6 +28,13 @@ class Store:
                 timestamp REAL NOT NULL, version INTEGER NOT NULL,
                 type TEXT NOT NULL, payload TEXT NOT NULL);
             CREATE INDEX IF NOT EXISTS event_task ON events(task_id, seq);
+            CREATE INDEX IF NOT EXISTS workload_status ON workloads(json_extract(data, '$.status'));
+            CREATE TABLE IF NOT EXISTS scheduler (id INTEGER PRIMARY KEY CHECK(id=1), last_task TEXT);
+            CREATE TABLE IF NOT EXISTS worker_liveness (
+                task_id TEXT NOT NULL, worker_id TEXT NOT NULL, attempt INTEGER NOT NULL,
+                step INTEGER NOT NULL, lease_until REAL NOT NULL, progress INTEGER NOT NULL,
+                last_progress REAL NOT NULL, last_write REAL NOT NULL,
+                PRIMARY KEY(task_id, worker_id));
             CREATE TABLE IF NOT EXISTS effects (
                 operation_id TEXT PRIMARY KEY, task_id TEXT NOT NULL,
                 payload TEXT NOT NULL, receipt TEXT NOT NULL);
@@ -62,7 +69,10 @@ class Store:
     def get(self, table, key):
         assert table in {"workloads", "vms"}
         row = self.db.execute(f"SELECT data FROM {table} WHERE id = ?", (key,)).fetchone()
-        return json.loads(row[0]) if row else None
+        if not row:
+            return None
+        value = json.loads(row[0])
+        return self.with_liveness(value) if table == "workloads" else value
 
     # Decode all records from an allowed projection table in insertion order.
     # Callers use a transaction when the results inform scheduling or mutation.
@@ -72,7 +82,59 @@ class Store:
     # Output: List of decoded record dictionaries ordered by SQLite row ID.
     def all(self, table):
         assert table in {"workloads", "vms"}
-        return [json.loads(r[0]) for r in self.db.execute(f"SELECT data FROM {table} ORDER BY rowid")]
+        values = [json.loads(r[0]) for r in self.db.execute(f"SELECT data FROM {table} ORDER BY rowid")]
+        return [self.with_liveness(v) for v in values] if table == "workloads" else values
+
+    # Read unfinished workload projections using the status index, then merge telemetry.
+    # Inputs:
+    #   self: Store accessed within the caller's transaction.
+    # Output: Active workload dictionaries in stable insertion order.
+    def active_workloads(self):
+        rows = self.db.execute("SELECT data FROM workloads WHERE json_extract(data, '$.status') IN ('queued','running','recovering') ORDER BY rowid")
+        return [self.with_liveness(json.loads(row[0])) for row in rows]
+
+    # Overlay the latest telemetry only when it belongs to this checkpoint's attempt/step.
+    # Inputs:
+    #   self: Store containing compact liveness records.
+    #   task: Mutable decoded workload projection.
+    # Output: The same task dictionary with matching live lease/progress values.
+    def with_liveness(self, task):
+        for row in self.db.execute("SELECT * FROM worker_liveness WHERE task_id=?", (task["id"],)):
+            worker = task["workers"].get(row["worker_id"])
+            if worker and worker["attempt"] == row["attempt"] and worker["next_step"] == row["step"]:
+                for key in ("lease_until", "progress", "last_progress", "last_write"):
+                    worker[key] = row[key]
+        return task
+
+    # Persist lease/progress telemetry without rewriting a workload or appending history.
+    # Inputs:
+    #   self: Store with an open transaction.
+    #   task_id: Workload ID for the worker.
+    #   worker: Current worker dictionary with attempt, cursor, and liveness fields.
+    # Output: None; upserts one compact row atomically with the caller's changes.
+    def save_liveness(self, task_id, worker):
+        self.db.execute("""INSERT INTO worker_liveness VALUES(?,?,?,?,?,?,?,?)
+            ON CONFLICT(task_id,worker_id) DO UPDATE SET attempt=excluded.attempt,
+            step=excluded.step, lease_until=excluded.lease_until, progress=excluded.progress,
+            last_progress=excluded.last_progress, last_write=excluded.last_write""",
+            (task_id, worker["id"], worker["attempt"], worker["next_step"], worker["lease_until"],
+             worker["progress"], worker["last_progress"], worker["last_write"]))
+
+    # Read the scheduler's durable rotation cursor without changing assignment order.
+    # Inputs:
+    #   self: Store with an open transaction.
+    # Output: Last scheduled workload ID, or None before the first assignment.
+    def scheduling_cursor(self):
+        row = self.db.execute("SELECT last_task FROM scheduler WHERE id=1").fetchone()
+        return row[0] if row else None
+
+    # Move the rotation cursor as part of the transaction that commits an assignment.
+    # Inputs:
+    #   self: Store with an open assignment transaction.
+    #   task_id: Workload ID that received the most recent slot.
+    # Output: None; persists the cursor for the next scheduling cycle or restart.
+    def advance_cursor(self, task_id):
+        self.db.execute("INSERT INTO scheduler VALUES(1,?) ON CONFLICT(id) DO UPDATE SET last_task=excluded.last_task", (task_id,))
 
     # Insert or replace a JSON projection record within the caller's transaction.
     # Only the internal workload and VM tables are allowed as SQL identifiers.
@@ -117,9 +179,11 @@ class Store:
         self.db.execute("INSERT INTO events(task_id,timestamp,version,type,payload) VALUES(?,?,?,?,?)",
                         (task["id"], now, task["version"], "checkpoint", json.dumps(task, allow_nan=False)))
         self.put("workloads", task["id"], task)
+        # A fresh lifecycle checkpoint absorbs telemetry; future updates start a new row.
+        self.db.execute("DELETE FROM worker_liveness WHERE task_id=?", (task["id"],))
 
     # Atomically reconstruct workload projections from checkpoint events in log order.
-    # VM records and the simulated effect registry are retained unchanged.
+    # VM records, matching telemetry, scheduler cursor, and effect receipts are retained.
     # Inputs:
     #   self: Store containing the checkpoint event history.
     # Output: None; replaces workload projections with their latest logged snapshots.

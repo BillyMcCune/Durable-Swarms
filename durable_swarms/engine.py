@@ -167,7 +167,7 @@ class Engine:
     #   self: Engine owning VM and worker leases.
     #   body: Dictionary with vm_id, session, and optional active list of
     #         {task_id, worker_id, attempt} records; active defaults to an empty list.
-    # Output: {"ok": True}; persists valid lease renewals.
+    # Output: {"ok": True}; persists compact lease records without workload snapshots.
     def heartbeat(self, body):
         with self.store.transaction():
             vm = self.vm(body)
@@ -176,16 +176,17 @@ class Engine:
             # Only running attempts listed by the daemon get renewed. VM health alone
             # must never renew a worker which exited on an otherwise healthy machine.
             reports = {(r["task_id"], r["worker_id"], r["attempt"]) for r in body.get("active", [])}
-            for task in self.store.all("workloads"):
-                changed = False
-                for worker in task["workers"].values():
-                    if (worker["state"] in ACTIVE and worker["vm_id"] == vm["id"] and worker["session"] == vm["session"]
-                            and worker["lease_until"] > self.clock() and (task["id"], worker["id"], worker["attempt"]) in reports):
-                        worker["lease_until"] = vm["expires"]
-                        self.event(task, "lease_renewed", worker, expires=vm["expires"])
-                        changed = True
-                if changed:
-                    self.save(task)
+            tasks = {}
+            for task_id, worker_id, attempt in reports:
+                if task_id not in tasks:
+                    tasks[task_id] = self.store.get("workloads", task_id)
+                task = tasks[task_id]
+                worker = task["workers"].get(worker_id) if task else None
+                if (worker and task["status"] not in TERMINAL and worker["state"] in ACTIVE
+                        and worker["vm_id"] == vm["id"] and worker["session"] == vm["session"]
+                        and worker["lease_until"] > self.clock() and worker["attempt"] == attempt):
+                    worker["lease_until"] = vm["expires"]
+                    self.store.save_liveness(task_id, worker)
         return {"ok": True}
 
     # Set a workload's terminal outcome and fence every unfinished worker.
@@ -238,7 +239,7 @@ class Engine:
     #   reason: Explanation attached to each affected attempt.
     # Output: None; saves all affected workloads in the caller's transaction.
     def lose_vm(self, vm_id, reason):
-        for task in self.store.all("workloads"):
+        for task in self.store.active_workloads():
             changed = False
             for worker in task["workers"].values():
                 if worker["vm_id"] == vm_id and worker["state"] in ACTIVE:
@@ -302,7 +303,7 @@ class Engine:
         with self.store.transaction():
             now = self.clock()
             vms = {v["id"]: v for v in self.store.all("vms")}
-            tasks = self.store.all("workloads")
+            tasks = self.store.active_workloads()
             dirty = set()
             for task in tasks:
                 if task["status"] in TERMINAL:
@@ -333,6 +334,18 @@ class Engine:
                         used[worker["vm_id"]] = used.get(worker["vm_id"], 0) + 1
             # Round-robin over workloads: allocate at most one worker per workload per pass.
             pending = [t for t in tasks if t["status"] not in TERMINAL]
+            last_task = self.store.scheduling_cursor()
+            ids = [t["id"] for t in pending]
+            if last_task in ids:
+                start = ids.index(last_task) + 1
+                pending = pending[start:] + pending[:start]
+            elif last_task is not None:
+                # A completed cursor owner is absent from active work. Compare original
+                # insertion positions so completion cannot reset priority to the oldest.
+                cursor = self.store.db.execute("SELECT rowid FROM workloads WHERE id=?", (last_task,)).fetchone()
+                if cursor:
+                    later = {r[0] for r in self.store.db.execute("SELECT id FROM workloads WHERE rowid>? AND json_extract(data, '$.status') IN ('queued','running','recovering')", (cursor[0],))}
+                    pending = [t for t in pending if t["id"] in later] + [t for t in pending if t["id"] not in later]
             while pending:
                 next_pass = []
                 for task in pending:
@@ -349,6 +362,7 @@ class Engine:
                     if task["status"] == "queued":
                         task["status"] = "running"
                     self.event(task, "worker_assigned", worker, vm_id=vm["id"], next_step=worker["next_step"])
+                    self.store.advance_cursor(task["id"])
                     dirty.add(task["id"])
                     next_pass.append(task)
                 pending = next_pass
@@ -366,7 +380,7 @@ class Engine:
         with self.store.transaction():
             vm = self.vm(body)
             jobs = []
-            for task in self.store.all("workloads"):
+            for task in self.store.active_workloads():
                 for worker in task["workers"].values():
                     if (task["status"] not in TERMINAL and worker["state"] in ACTIVE and worker["vm_id"] == vm["id"]
                             and worker["session"] == vm["session"] and worker["lease_until"] > self.clock()):
@@ -395,7 +409,7 @@ class Engine:
     # Record strictly advancing progress for the current incomplete step.
     # Repeated or lower values do not reset the stall-detection timer.
     # Inputs:
-    #   self: Engine tracking durable worker progress and timestamps.
+    #   self: Engine tracking compact durable worker progress and timestamps.
     #   body: Worker identity (task_id, worker_id, attempt, vm_id, session),
     #         current step index, and a nonnegative integer progress value.
     # Output: {"ok": True}; persists only progress that exceeds the prior value.
@@ -407,8 +421,7 @@ class Engine:
                 raise APIError("invalid progress")
             if progress > worker["progress"]:
                 worker["progress"], worker["last_progress"], worker["last_write"] = progress, self.clock(), self.clock()
-                self.event(task, "progress", worker, step=step, progress=progress)
-                self.save(task)
+                self.store.save_liveness(task["id"], worker)
         return {"ok": True}
 
     # Validate an effect step and return its stable operation ID and counter payload.
