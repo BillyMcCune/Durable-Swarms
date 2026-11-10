@@ -103,6 +103,30 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(sum(e["type"] == "effect_completed" for e in events), 1)
         self.assertTrue(any(e["type"] == "recovery_completed" for e in events))
 
+    def test_dashboard_tracks_capacity_processes_and_offline_vms(self):
+        self.engine.pool["not-started"] = 2
+        old = self.begin()
+        self.engine.start(old)
+        self.engine.heartbeat({"vm_id": old["vm_id"], "session": old["session"],
+                               "active": [{"task_id": "task", "worker_id": "lead", "attempt": 1, "pid": 1234}]})
+        view = self.engine.dashboard()
+        vms = {v["id"]: v for v in view["vms"]}
+        self.assertFalse(vms["not-started"]["online"])
+        self.assertEqual(vms["not-started"]["capacity"], 2)
+        worker = vms[old["vm_id"]]["assignments"][0]
+        self.assertEqual(worker["pid"], 1234)
+        self.assertEqual(worker["process_state"], "alive")
+        self.assertEqual(view["tasks"][0]["id"], "task")
+        self.assertTrue(view["events"])
+        self.assertTrue(all(e["type"] != "checkpoint" for e in view["events"]))
+        self.clock.now += 6
+        view = self.engine.dashboard()
+        vm = next(v for v in view["vms"] if v["id"] == old["vm_id"])
+        self.assertFalse(vm["online"])
+        self.assertEqual(vm["assignments"][0]["process_state"], "unreachable")
+        self.engine.tick()
+        self.assertTrue(all(not v["assignments"] for v in self.engine.dashboard()["vms"]))
+
     # Confirm VM heartbeats cannot renew an absent worker or authorize its stale writes.
     # Inputs:
     #   self: RecoveryTests instance with registered VM fixtures.

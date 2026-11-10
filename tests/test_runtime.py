@@ -3,6 +3,7 @@
 import json
 import os
 from pathlib import Path
+from urllib.request import urlopen
 import signal
 import socket
 import subprocess
@@ -18,6 +19,30 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class RuntimeTests(unittest.TestCase):
+    def test_dashboard_serves_assets_and_live_submission(self):
+        for path, content_type in [("/", "text/html"), ("/dashboard.js", "text/javascript"),
+                                   ("/dashboard.css", "text/css")]:
+            with urlopen(self.url + path) as response:
+                self.assertIn(content_type, response.headers["Content-Type"])
+                self.assertTrue(response.read())
+        initial = request(self.url, "/dashboard")
+        self.assertEqual(len(initial["vms"]), 2)
+        self.assertEqual(initial["tasks"], [])
+        request(self.url, "/submit", {"task_id": "dashboard-task", "spec": {
+            "leader": {"id": "lead", "steps": [{"type": "compute", "seconds": 3}]}}})
+
+        def live_worker():
+            view = request(self.url, "/dashboard")
+            return next((w for vm in view["vms"] for w in vm["assignments"]
+                         if w["process_state"] == "alive" and w["pid"]), None)
+
+        worker = self.wait_for(live_worker, 10)
+        self.assertEqual(worker["task_id"], "dashboard-task")
+        self.assertEqual(worker["state"], "running")
+        self.wait_for(lambda: request(self.url, "/status?task_id=dashboard-task")["status"] == "completed")
+        view = request(self.url, "/dashboard")
+        self.assertTrue(all(not vm["assignments"] for vm in view["vms"]))
+
     # Start an isolated HTTP orchestrator and two VM daemons, registering cleanup
     # before launch so partially completed setup still releases owned resources.
     # Inputs:

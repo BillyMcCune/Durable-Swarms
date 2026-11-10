@@ -26,6 +26,15 @@ python3 -m durable_swarms vm --id vm-2
 
 Submit a workflow and inspect its state:
 
+You can also open **http://localhost:8080/** in your browser. The dashboard
+refreshes every second and shows all configured VMs (including offline ones),
+occupied and available capacity slots, worker states, daemon-reported process IDs,
+step progress, workloads, and recent durable events. Use its task submission form
+to edit a sample workflow or submit your own JSON specification. Process observations
+are based on the latest heartbeat; slot numbers are display positions, not fixed
+OS process slots. Restart an already-running orchestrator and VM daemons after
+updating to enable the dashboard and process ID reporting.
+
 ```sh
 python3 -m durable_swarms submit examples/workflow.json --task-id example-1
 python3 -m durable_swarms status example-1

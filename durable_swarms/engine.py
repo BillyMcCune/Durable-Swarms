@@ -172,6 +172,10 @@ class Engine:
         with self.store.transaction():
             vm = self.vm(body)
             vm["expires"] = self.clock() + self.lease
+            vm["last_heartbeat"] = self.clock()
+            vm["processes"] = [{"task_id": r["task_id"], "worker_id": r["worker_id"],
+                                "attempt": r["attempt"], "pid": r.get("pid")}
+                               for r in body.get("active", [])]
             self.store.put("vms", vm["id"], vm)
             # Only running attempts listed by the daemon get renewed. VM health alone
             # must never renew a worker which exited on an otherwise healthy machine.
@@ -595,6 +599,37 @@ class Engine:
     #   self: Engine providing workload projections and simulated counter values.
     #   task_id: Identifier of the workload to inspect.
     # Output: Workload dictionary augmented with effects mapping counter keys to values.
+    def dashboard(self):
+        """Return a consistent cluster view, including offline configured VMs."""
+        with self.store.transaction():
+            now = self.clock()
+            tasks = self.store.all("workloads")
+            registered = {v["id"]: v for v in self.store.all("vms")}
+            vms = []
+            for vm_id, capacity in self.pool.items():
+                vm = registered.get(vm_id)
+                online = bool(vm and vm["expires"] > now)
+                assignments = []
+                for task in tasks:
+                    for worker in task["workers"].values():
+                        if task["status"] in TERMINAL or worker["state"] not in ACTIVE or worker["vm_id"] != vm_id:
+                            continue
+                        report = next((r for r in (vm or {}).get("processes", [])
+                                       if r["task_id"] == task["id"] and r["worker_id"] == worker["id"]
+                                       and r["attempt"] == worker["attempt"]), None)
+                        live = online and worker["session"] == vm["session"] and worker["lease_until"] > now
+                        assignments.append({"task_id": task["id"], **worker,
+                                            "pid": report.get("pid") if report else None,
+                                            "process_state": "unreachable" if not live else
+                                            "alive" if report else "awaiting heartbeat",
+                                            "stalled": live and now - worker["last_progress"] >= self.stall})
+                vms.append({"id": vm_id, "capacity": capacity, "online": online,
+                            "last_heartbeat": (vm or {}).get("last_heartbeat"),
+                            "assignments": assignments})
+            rows = self.store.db.execute("SELECT * FROM events WHERE type != 'checkpoint' ORDER BY seq DESC LIMIT 80")
+            events = [{**dict(row), "payload": json.loads(row["payload"])} for row in rows]
+            return {"now": now, "vms": vms, "tasks": tasks, "events": events}
+
     def status(self, task_id):
         with self.store.transaction():
             task = self.task(task_id)

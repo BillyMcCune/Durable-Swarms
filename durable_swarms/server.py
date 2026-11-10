@@ -3,6 +3,7 @@
 import fcntl
 import json
 import logging
+from pathlib import Path
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
@@ -70,7 +71,25 @@ def serve(config):
             query = parse_qs(url.query)
             try:
                 if self.command == "GET":
-                    if url.path == "/health":
+                    assets = {"/": ("dashboard.html", "text/html; charset=utf-8"),
+                              "/dashboard.js": ("dashboard.js", "text/javascript; charset=utf-8"),
+                              "/dashboard.css": ("dashboard.css", "text/css; charset=utf-8")}
+                    if url.path in assets:
+                        filename, content_type = assets[url.path]
+                        data = (Path(__file__).parent / "static" / filename).read_bytes()
+                        self.send_response(200)
+                        self.send_header("Content-Type", content_type)
+                        self.send_header("Content-Length", str(len(data)))
+                        self.send_header("Cache-Control", "no-store")
+                        self.end_headers()
+                        try:
+                            self.wfile.write(data)
+                        except (BrokenPipeError, ConnectionResetError):
+                            pass
+                        return
+                    if url.path == "/dashboard":
+                        result = engine.dashboard()
+                    elif url.path == "/health":
                         result = {"ok": True}
                     elif url.path == "/status":
                         result = engine.status(query["task_id"][0])

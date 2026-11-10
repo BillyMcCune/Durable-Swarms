@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durable Swarms · Cluster dashboard</title>
+  <link rel="stylesheet" href="/dashboard.css"><script src="/dashboard.js" defer></script>
+</head>
+<body>
+  <header><a href="/" class="brand">DS<span>Durable Swarms</span></a><div id="connection" role="status">Connecting…</div></header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">ORCHESTRATOR / LIVE OVERVIEW</p><h1>Your cluster, at a glance.</h1><p>VM capacity, worker processes, and durable workflow progress.</p></div><a class="button" href="#submission">+ Submit task</a></div>
+    <div id="error" role="alert" hidden></div>
+    <section id="metrics" class="metrics" aria-label="Cluster summary"></section>
+    <section><div class="section-heading"><h2>Virtual machines</h2><span>Refreshes every second</span></div><p class="hint">Slots represent worker capacity. Process IDs are reported by each VM daemon; heartbeat observations may lag execution.</p><div id="vms" class="vm-grid"><p>Loading cluster…</p></div></section>
+    <div class="workspace">
+      <div><section><div class="section-heading"><h2>Workloads</h2><span id="task-count"></span></div><div class="table-wrap"><table><thead><tr><th>Task / worker</th><th>State</th><th>VM</th><th>Progress</th></tr></thead><tbody id="tasks"></tbody></table></div></section>
+      <section><div class="section-heading"><h2>Recent activity</h2><span>Latest 80 durable events</span></div><p class="hint">Workflow events, including assignments, recovery, and effects. Expand an event to see its payload.</p><div id="events" class="events"></div></section></div>
+      <section id="submission" class="submission"><p class="eyebrow">NEW WORKLOAD</p><h2>Submit a task</h2><p>Choose a starting workflow, or paste your own specification.</p>
+        <form id="submit-form"><label for="task-id">Task ID</label><input id="task-id" required maxlength="200" placeholder="e.g. coding-workflow-01"><p class="hint">Kept on retry to prevent duplicate submissions.</p>
+          <label for="preset">Starting workflow</label><select id="preset"><option value="parallel">Parallel workers</option><option value="recovery">Recovery demo</option><option value="simple">Single worker</option></select>
+          <label for="spec">Workflow JSON</label><textarea id="spec" spellcheck="false" required rows="22"></textarea><button id="submit-button" type="submit">Submit to orchestrator</button><p id="submit-result" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </div>
+  </main><footer>Durable Swarms <span>Local cluster control</span></footer>
+</body>
+</html>

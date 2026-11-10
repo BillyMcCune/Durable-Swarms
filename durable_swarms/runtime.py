@@ -151,7 +151,7 @@ def run_vm(url, vm_id, interval=0.5):
                         if code == 24:
                             logging.warning("simulated VM loss on %s", vm_id)
                             return 24
-                active = [{"task_id": job["task_id"], "worker_id": job["worker"]["id"], "attempt": job["worker"]["attempt"]}
+                active = [{"task_id": job["task_id"], "worker_id": job["worker"]["id"], "attempt": job["worker"]["attempt"], "pid": process.pid}
                           for process, job in jobs.values() if process.poll() is None]
                 request(url, "/heartbeat", {**identity, "active": active})
                 assignments = request(url, "/poll", identity)["jobs"]
