@@ -117,10 +117,10 @@ sequenceDiagram
     W->>O: Apply effect with stable operation ID
     O->>O: Atomically commit mutation + receipt
     Note over W: Crash before step checkpoint
-    O->>O: Lease expires; fence attempt 1
+    O->>O: Lease expires, fence attempt 1
     O->>R: Assign latest checkpoint with attempt 2
     R->>O: Retry same effect operation ID
-    O-->>R: Original receipt; no second mutation
+    O-->>R: Original receipt, no second mutation
     R->>O: Commit next-step checkpoint
 ```
 
