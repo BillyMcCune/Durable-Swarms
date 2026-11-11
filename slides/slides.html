@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Durable Swarms</title><link rel="stylesheet" href="slides.css"></head><body><main id="deck" aria-live="polite">
+<section class="slide title active"><div class="title-block"><h1>Durable Swarms</h1><p class="subtitle">Recovering distributed workflow simulations</p><p class="byline">Pete Crowley · Billy McCune · Jonathan Ouwerx</p></div></section>
+<section class="slide"><h1>The Problem: Keep Work Moving</h1><ol><li>Multiple independent workloads share a fixed VM pool.</li><li>Workers or daemons can fail or stop making progress.</li><li>Replacement workers resume from durable state.</li><li>The implementation simulates workflows; it does not yet run coding agents.</li></ol></section>
+<section class="slide"><h1>Current Architecture</h1><pre class="mermaid">
+flowchart TD
+    App[Application / CLI] -->|SubmitTask| O[Single orchestrator]
+    O -->|status and results| App
+    O &lt;--&gt;|durable events and checkpoints| DB[(SQLite on persistent storage)]
+    VM1[VM daemon + worker slots] -->|heartbeat and poll| O
+    VM2[VM daemon + worker slots] -->|heartbeat and poll| O
+    O -->|assignments and resume checkpoints| VM1
+    O -->|assignments and resume checkpoints| VM2
+    VM1 -->|progress, effect intent, completion| O
+    VM2 -->|progress, effect intent, completion| O
+</pre><p class="diagram-source">Source: docs/architecture.md</p></section>
+<section class="slide"><h1>Workload Model</h1><ol><li>Each workload declares one leader and child workers with dependencies.</li><li>Steps simulate compute delays or workload-local counter effects.</li><li>The leader yields its slot while waiting and collects child results.</li><li>Seeded durations and fault schedules make simulated inputs reproducible.</li></ol></section>
+<section class="slide"><h1>Scheduling and Membership</h1><ol><li>Configured VMs provide a fixed number of worker slots.</li><li>The scheduler allocates at most one ready worker per workload per pass.</li><li>Dependencies must complete before a child is ready.</li><li>Replacement placement prefers another live VM, then the least occupied VM.</li></ol></section>
+<section class="slide"><h1>Detect, Fence, and Replace</h1><ol><li>Lease expiry or a progress timeout identifies failed or stalled work.</li><li>A new attempt ID fences stale worker requests.</li><li>The leader authorizes failed child recovery; failed leaders are queued directly.</li><li>The replacement resumes at the next incomplete step.</li></ol></section>
+<section class="slide"><h1>SQLite Is the Recovery Boundary</h1><ol><li>Ordered events preserve workload and worker history.</li><li>Checkpoint events capture workload state and next-step cursors.</li><li>The current projection is rebuilt from checkpoint events after restart.</li><li>SQLite uses WAL and synchronous=FULL on persistent storage.</li></ol></section>
+<section class="slide"><h1>Retrying a Simulated Effect Safely</h1><pre class="mermaid">
+sequenceDiagram
+    participant W as Worker attempt 1
+    participant O as Orchestrator + durable store
+    participant R as Worker attempt 2 on another VM
+    W->>O: Commit effect intent
+    W->>O: Apply effect with stable operation ID
+    O->>O: Atomically commit mutation + receipt
+    Note over W: Crash before step checkpoint
+    O->>O: Lease expires, fence attempt 1
+    O->>R: Assign latest checkpoint with attempt 2
+    R->>O: Retry same effect operation ID
+    O-->>R: Original receipt, no second mutation
+    R->>O: Commit next-step checkpoint
+</pre><p class="diagram-source">Source: docs/architecture.md · simulated effects only</p></section>
+<section class="slide"><h1>Failure Injection and Tests</h1><ol><li>Modeled faults include worker exit, VM daemon loss, stalls, retry loops, invalid results, and effect interruption.</li><li>Tests cover leases, stale attempts, dependencies, recovery, durable effects, and orchestrator restart.</li><li>Integration tests use local processes, not measurements on separate physical VMs.</li></ol></section>
+<section class="slide"><h1>Demonstration: Crash After an Effect</h1><ol><li>Start the orchestrator and two VM daemons; submit the example workflow.</li><li>The implementation worker exits after the simulated patch and before checkpointing.</li><li>A replacement resumes, reuses the effect receipt, and completes.</li><li>Inspect the event log and verify patches_applied = 1.</li></ol></section>
+<section class="slide"><h1>Boundaries and Next Steps</h1><ol><li>One orchestrator and its durable database are the recovery boundary.</li><li>The unauthenticated API is intended for a trusted network; isolation is logical.</li><li>Real coding agents, external tool adapters, and cloud provisioning are future work.</li><li>Measure recovery and overhead across actual machines.</li></ol></section>
+<section class="slide title"><div class="title-block"><h1>Durable Swarms</h1><p class="subtitle">Durable state and fenced attempts for recoverable workflows</p><p class="byline">Questions</p></div></section>
+</main><footer><span id="counter">1 / 12</span><span>← → or space to navigate</span></footer><script src="slides.js"></script><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({startOnLoad:true});</script></body></html>
