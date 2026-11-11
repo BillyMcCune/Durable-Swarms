@@ -106,9 +106,11 @@ def worker_main(url):
 #   url: Orchestrator base HTTP URL.
 #   vm_id: VM identifier configured in the orchestrator's fixed pool.
 #   interval: Seconds between daemon polls and worker progress reports; default 0.5.
+#   worker_cmd: Optional argv for worker subprocesses; defaults to the simulated worker.
 # Output: Exit code 0 on interruption or 24 for simulated VM loss; otherwise runs
 #         continuously, retrying connection failures and changed sessions.
-def run_vm(url, vm_id, interval=0.5):
+def run_vm(url, vm_id, interval=0.5, worker_cmd=None):
+    worker_cmd = worker_cmd or [sys.executable, "-m", "durable_swarms", "worker", "--url", url]
     # Route SIGTERM through the same finally-block cleanup used for Ctrl-C.
     # Inputs:
     #   signum: Received signal number, supplied by Python's signal handler.
@@ -164,7 +166,7 @@ def run_vm(url, vm_id, interval=0.5):
                     key = (job["task_id"], job["worker"]["id"], job["worker"]["attempt"])
                     if key in seen:
                         continue
-                    process = subprocess.Popen([sys.executable, "-m", "durable_swarms", "worker", "--url", url], stdin=subprocess.PIPE)
+                    process = subprocess.Popen(worker_cmd, stdin=subprocess.PIPE)
                     process.stdin.write(json.dumps({"job": job, "vm_id": vm_id, "session": session, "interval": interval}).encode())
                     process.stdin.close()
                     jobs[key] = (process, job)

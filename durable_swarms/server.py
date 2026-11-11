@@ -16,9 +16,14 @@ from .store import Store
 # server with its scheduler thread. Shut down the thread and release the lock on exit.
 # Inputs:
 #   config: Dictionary of database path, HTTP host/port, VM capacities, and timeouts.
+#   engine_cls: Engine class to instantiate; defaults to the simulation Engine.
+#   post_routes: Extra engine method names exposed as POST endpoints; default none.
+#   get_routes: Optional {path: callable(engine, store, query)} extra GET endpoints.
+#   static: Optional (directory, {path: (filename, content_type)}) replacing the
+#           built-in dashboard assets.
 # Output: None after shutdown; serves HTTP requests until interrupted and exits
 #         with SystemExit if another orchestrator already holds the database lock.
-def serve(config):
+def serve(config, engine_cls=Engine, post_routes=(), get_routes=None, static=None):
     path = config.get("database", "swarms.sqlite3")
     # Prevent two independently configured orchestrators from sharing the same database.
     lockfile = open(path + ".lock", "a")
@@ -29,8 +34,13 @@ def serve(config):
         raise SystemExit("another orchestrator is using this database")
     store = Store(path)
     store.rebuild()
-    engine = Engine(store, config)
+    engine = engine_cls(store, config)
     stop = threading.Event()
+    get_routes = get_routes or {}
+    static_dir, assets = static or (Path(__file__).parent / "static", {
+        "/": ("dashboard.html", "text/html; charset=utf-8"),
+        "/dashboard.js": ("dashboard.js", "text/javascript; charset=utf-8"),
+        "/dashboard.css": ("dashboard.css", "text/css; charset=utf-8")})
 
     class Handler(BaseHTTPRequestHandler):
         # Keep routine HTTP access logs at debug level to avoid noisy worker polling.
@@ -71,12 +81,9 @@ def serve(config):
             query = parse_qs(url.query)
             try:
                 if self.command == "GET":
-                    assets = {"/": ("dashboard.html", "text/html; charset=utf-8"),
-                              "/dashboard.js": ("dashboard.js", "text/javascript; charset=utf-8"),
-                              "/dashboard.css": ("dashboard.css", "text/css; charset=utf-8")}
                     if url.path in assets:
                         filename, content_type = assets[url.path]
-                        data = (Path(__file__).parent / "static" / filename).read_bytes()
+                        data = (Path(static_dir) / filename).read_bytes()
                         self.send_response(200)
                         self.send_header("Content-Type", content_type)
                         self.send_header("Content-Length", str(len(data)))
@@ -87,7 +94,9 @@ def serve(config):
                         except (BrokenPipeError, ConnectionResetError):
                             pass
                         return
-                    if url.path == "/dashboard":
+                    if url.path in get_routes:
+                        result = get_routes[url.path](engine, store, query)
+                    elif url.path == "/dashboard":
                         result = engine.dashboard()
                     elif url.path == "/health":
                         result = {"ok": True}
@@ -112,7 +121,7 @@ def serve(config):
                         raise APIError("request must be an object", 400)
                     routes = {"/" + name: getattr(engine, name) for name in (
                         "submit", "register", "heartbeat", "poll", "start", "manage", "progress", "intent",
-                        "effect", "checkpoint", "finish", "fail", "stop", "recreate")}
+                        "effect", "checkpoint", "finish", "fail", "stop", "recreate", *post_routes)}
                     if url.path not in routes:
                         raise APIError("unknown endpoint", 404)
                     result = routes[url.path](body)
