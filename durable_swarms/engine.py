@@ -356,6 +356,7 @@ class Engine:
                     candidates = [w for w in task["workers"].values() if w["state"] == "queued" and
                                   all(task["workers"].get(d, {}).get("state") == "completed" for d in w["node"]["depends_on"])]
                     available = [v for v in vms.values() if v["id"] in self.pool and v["expires"] > now and used[v["id"]] < self.pool[v["id"]]]
+                    candidates = self.placeable(task, candidates, available, used)
                     if not candidates or not available:
                         continue
                     worker = candidates[0]
@@ -373,6 +374,18 @@ class Engine:
             for task in tasks:
                 if task["id"] in dirty:
                     self.save(task)
+
+    # Hook for subclasses: restrict or reorder the ready workers of one workload that
+    # may be placed in this pass. The default places them as listed.
+    # Inputs:
+    #   self: Engine running the scheduling pass.
+    #   task: Workload whose workers are being considered.
+    #   candidates: Its queued workers whose dependencies are complete.
+    #   available: Live VM records that still have a free slot.
+    #   used: Mapping of VM ID to slots in use.
+    # Output: The workers eligible for placement, in priority order.
+    def placeable(self, task, candidates, available, used):
+        return candidates
 
     # Return this VM session's live assignments, including resume state and faults.
     # Polling reads assignments without claiming new work or renewing leases.
