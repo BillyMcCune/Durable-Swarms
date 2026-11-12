@@ -6,6 +6,10 @@ library: no external packages or LLM API keys are required.
 
 Team: Pete Crowley, Billy McCune, Jonathan Ouwerx.
 
+> **Agent demo.** A separate mode with real LLM coding agents, a live dashboard, and
+> remote VMs lives in [`agent_demo/`](agent_demo/README.md). It does not change the
+> simulation described below.
+
 ## Run locally
 
 From the repository root, start the orchestrator in one terminal:

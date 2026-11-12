@@ -1,0 +1,14 @@
+{
+  "host": "127.0.0.1",
+  "port": 8081,
+  "database": "agent_demo.sqlite3",
+  "vms": {"vm-1": 4, "vm-2": 4, "vm-3": 4},
+  "recovery_reserve": 2,
+  "lease_seconds": 10,
+  "progress_timeout_seconds": 300,
+  "max_attempts": 5,
+  "tick_seconds": 0.2,
+  "crash_seconds": 20,
+  "model": "qwen2.5-coder:7b",
+  "limits": {"leader_steps": 60, "sub_steps": 40, "max_depth": 2, "max_workers": 16, "max_reviews": 2, "max_children": 3}
+}

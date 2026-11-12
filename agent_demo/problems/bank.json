@@ -1,0 +1,8064 @@
+[
+ {
+  "id": "two_sum",
+  "title": "Pair With Target Sum",
+  "difficulty": "easy",
+  "signature": "def two_sum(nums, target):",
+  "statement": "Given a list of integers `nums` and an integer `target`, return the indices of the\ntwo different positions whose values add up to `target`. Exactly one such pair\nexists. Return the two indices as a list, in either order.",
+  "entry": "two_sum",
+  "kind": "function",
+  "comparator": "unordered",
+  "stub": "# Keep the name `two_sum` exactly as given; the tests call it.\ndef two_sum(nums, target):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      2,
+      7,
+      11,
+      15
+     ],
+     9
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      2,
+      4
+     ],
+     6
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      3
+     ],
+     6
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      1,
+      2
+     ],
+     3
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      4,
+      3,
+      90
+     ],
+     0
+    ],
+    "expected": [
+     0,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      4,
+      3,
+      0
+     ],
+     0
+    ],
+    "expected": [
+     0,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      5,
+      75,
+      25
+     ],
+     100
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      -2,
+      -3,
+      -4,
+      -5
+     ],
+     -8
+    ],
+    "expected": [
+     2,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      -5,
+      -3,
+      -2,
+      -18,
+      -6,
+      -3
+     ],
+     -20
+    ],
+    "expected": [
+     3,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      -14,
+      6,
+      -20
+     ],
+     -34
+    ],
+    "expected": [
+     0,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -8,
+      8,
+      -15,
+      17
+     ],
+     9
+    ],
+    "expected": [
+     0,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      -15,
+      19,
+      -20,
+      -14,
+      4,
+      16,
+      8,
+      -11,
+      -4,
+      16
+     ],
+     -29
+    ],
+    "expected": [
+     0,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      -19
+     ],
+     -15
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -8,
+      -9,
+      15,
+      -20,
+      -7,
+      18,
+      13
+     ],
+     -5
+    ],
+    "expected": [
+     2,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      20,
+      12,
+      -9,
+      -17
+     ],
+     14
+    ],
+    "expected": [
+     0,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      16,
+      -18,
+      -12,
+      -2,
+      2,
+      3,
+      18,
+      14
+     ],
+     19
+    ],
+    "expected": [
+     1,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      -4,
+      18,
+      -10,
+      -2,
+      20
+     ],
+     0
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "id": "valid_parentheses",
+  "title": "Balanced Brackets",
+  "difficulty": "easy",
+  "signature": "def valid_parentheses(s):",
+  "statement": "The string `s` contains only the characters `()[]{}`. Return True if every opening\nbracket is closed by the same kind of bracket in the correct order, otherwise False.\nAn empty string is balanced.",
+  "entry": "valid_parentheses",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `valid_parentheses` exactly as given; the tests call it.\ndef valid_parentheses(s):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "()"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "()[]{}"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "(]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "([)]"
+    ],
+    "expected": false
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{[]}"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "(("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "()))"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{[()()]}"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "([{}])(("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "}{"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{()}}{[]}[]]{{}}()"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{[([]]]}"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "(([()]()))"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "{[]([])}({[]}[])"
+    ],
+    "expected": true
+   }
+  ]
+ },
+ {
+  "id": "merge_sorted_lists",
+  "title": "Merge Two Sorted Lists",
+  "difficulty": "easy",
+  "signature": "def merge_sorted_lists(a, b):",
+  "statement": "`a` and `b` are lists of integers, each already sorted in non-decreasing order.\nReturn one new list containing every element of both, sorted in non-decreasing order.",
+  "entry": "merge_sorted_lists",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `merge_sorted_lists` exactly as given; the tests call it.\ndef merge_sorted_lists(a, b):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      2,
+      4
+     ],
+     [
+      1,
+      3,
+      4
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     2,
+     3,
+     4,
+     4
+    ]
+   },
+   {
+    "args": [
+     [],
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [],
+     [
+      0
+     ]
+    ],
+    "expected": [
+     0
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      1
+     ],
+     []
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      5
+     ],
+     [
+      1,
+      2,
+      3
+     ]
+    ],
+    "expected": [
+     1,
+     2,
+     3,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      1,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      -1
+     ],
+     [
+      -2,
+      0
+     ]
+    ],
+    "expected": [
+     -3,
+     -2,
+     -1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3
+     ],
+     [
+      4,
+      5,
+      6
+     ]
+    ],
+    "expected": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      -9,
+      -7,
+      -6,
+      -1
+     ],
+     [
+      -6,
+      -3,
+      2,
+      7,
+      9,
+      9,
+      9
+     ]
+    ],
+    "expected": [
+     -9,
+     -7,
+     -6,
+     -6,
+     -3,
+     -1,
+     2,
+     7,
+     9,
+     9,
+     9
+    ]
+   },
+   {
+    "args": [
+     [
+      -9,
+      -6,
+      -2,
+      7,
+      8,
+      9
+     ],
+     [
+      4
+     ]
+    ],
+    "expected": [
+     -9,
+     -6,
+     -2,
+     4,
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "args": [
+     [
+      -7
+     ],
+     [
+      -9,
+      -3
+     ]
+    ],
+    "expected": [
+     -9,
+     -7,
+     -3
+    ]
+   },
+   {
+    "args": [
+     [
+      -6
+     ],
+     []
+    ],
+    "expected": [
+     -6
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      1,
+      2,
+      6,
+      6
+     ],
+     [
+      -9,
+      -7,
+      -3,
+      -1,
+      4,
+      7,
+      8
+     ]
+    ],
+    "expected": [
+     -9,
+     -7,
+     -3,
+     -1,
+     -1,
+     1,
+     2,
+     4,
+     6,
+     6,
+     7,
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      -4,
+      -3,
+      8
+     ],
+     [
+      -8,
+      -2,
+      5
+     ]
+    ],
+    "expected": [
+     -8,
+     -4,
+     -3,
+     -2,
+     5,
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      -9,
+      -4,
+      3,
+      3,
+      7
+     ],
+     [
+      -8
+     ]
+    ],
+    "expected": [
+     -9,
+     -8,
+     -4,
+     3,
+     3,
+     7
+    ]
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     [
+      -8,
+      -5
+     ]
+    ],
+    "expected": [
+     -8,
+     -5,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      1
+     ],
+     [
+      -8,
+      -5,
+      -3
+     ]
+    ],
+    "expected": [
+     -8,
+     -5,
+     -3,
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "id": "best_time_stock",
+  "title": "Best Single Trade",
+  "difficulty": "easy",
+  "signature": "def best_time_stock(prices):",
+  "statement": "`prices[i]` is the price of a stock on day i. You may buy on one day and sell on a\nlater day. Return the largest profit you can make, or 0 if no trade makes a profit.",
+  "entry": "best_time_stock",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `best_time_stock` exactly as given; the tests call it.\ndef best_time_stock(prices):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      7,
+      1,
+      5,
+      3,
+      6,
+      4
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      7,
+      6,
+      4,
+      3,
+      1
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ]
+    ],
+    "expected": 1
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      5
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      2,
+      2,
+      2
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+     ]
+    ],
+    "expected": 8
+   },
+   {
+    "args": [
+     [
+      2,
+      4,
+      1
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      1,
+      100,
+      1,
+      100
+     ]
+    ],
+    "expected": 99
+   },
+   {
+    "args": [
+     [
+      11,
+      10,
+      17,
+      6,
+      11,
+      2
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      10,
+      0,
+      15,
+      13,
+      1,
+      12,
+      3
+     ]
+    ],
+    "expected": 15
+   },
+   {
+    "args": [
+     [
+      8,
+      0,
+      19,
+      0,
+      17,
+      0,
+      5
+     ]
+    ],
+    "expected": 19
+   },
+   {
+    "args": [
+     [
+      0,
+      7,
+      6,
+      10,
+      1,
+      1,
+      20,
+      16
+     ]
+    ],
+    "expected": 20
+   },
+   {
+    "args": [
+     [
+      20,
+      3
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      11,
+      19,
+      4,
+      4,
+      6,
+      6,
+      15
+     ]
+    ],
+    "expected": 11
+   },
+   {
+    "args": [
+     [
+      20,
+      1,
+      5,
+      5,
+      8,
+      2,
+      10,
+      20
+     ]
+    ],
+    "expected": 19
+   }
+  ]
+ },
+ {
+  "id": "valid_palindrome",
+  "title": "Alphanumeric Palindrome",
+  "difficulty": "easy",
+  "signature": "def valid_palindrome(s):",
+  "statement": "Return True if the string `s` reads the same forwards and backwards once you ignore\nletter case and drop every character that is not a letter or a digit. Otherwise\nreturn False. A string with no letters or digits counts as a palindrome.",
+  "entry": "valid_palindrome",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `valid_palindrome` exactly as given; the tests call it.\ndef valid_palindrome(s):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "A man, a plan, a canal: Panama"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "race a car"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     " "
+    ],
+    "expected": true
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "a"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "ab"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "0P"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "No lemon, no melon"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "12321"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "1231"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     ".,"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "Was it a car or a cat I saw?"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     " a1 ."
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     ",,abb"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "a.1aAA"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "b, bb ,b"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     ",AaAa.,. "
+    ],
+    "expected": true
+   }
+  ]
+ },
+ {
+  "id": "climbing_stairs",
+  "title": "Ways To Climb Stairs",
+  "difficulty": "easy",
+  "signature": "def climbing_stairs(n):",
+  "statement": "A staircase has `n` steps (n >= 1). Each move climbs either 1 or 2 steps. Return the\nnumber of different sequences of moves that reach exactly the top.",
+  "entry": "climbing_stairs",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `climbing_stairs` exactly as given; the tests call it.\ndef climbing_stairs(n):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     2
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     3
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     5
+    ],
+    "expected": 8
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     1
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     4
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     6
+    ],
+    "expected": 13
+   },
+   {
+    "args": [
+     10
+    ],
+    "expected": 89
+   },
+   {
+    "args": [
+     20
+    ],
+    "expected": 10946
+   },
+   {
+    "args": [
+     30
+    ],
+    "expected": 1346269
+   },
+   {
+    "args": [
+     45
+    ],
+    "expected": 1836311903
+   }
+  ]
+ },
+ {
+  "id": "majority_element",
+  "title": "Majority Value",
+  "difficulty": "easy",
+  "signature": "def majority_element(nums):",
+  "statement": "`nums` is a non-empty list of integers in which one value appears more than half\nthe time. Return that value.",
+  "entry": "majority_element",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `majority_element` exactly as given; the tests call it.\ndef majority_element(nums):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      3,
+      2,
+      3
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      2,
+      2,
+      1,
+      1,
+      1,
+      2,
+      2
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      1
+     ]
+    ],
+    "expected": 1
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      5,
+      5
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      -1,
+      -1,
+      2
+     ]
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0,
+      1,
+      1
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      7,
+      8,
+      7
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      1,
+      0,
+      7,
+      7,
+      5,
+      7,
+      7,
+      7,
+      5
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      7,
+      7,
+      3,
+      1,
+      5,
+      7,
+      7,
+      1,
+      7,
+      0,
+      7
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      7,
+      7,
+      2,
+      7,
+      7,
+      2,
+      3
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      1,
+      7,
+      7,
+      7,
+      7,
+      1
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      1,
+      5,
+      7,
+      7,
+      7
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      2,
+      7,
+      7,
+      7,
+      7,
+      4,
+      3
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      7,
+      7,
+      5,
+      7,
+      1,
+      3,
+      7,
+      7,
+      7,
+      0
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      7,
+      3,
+      7,
+      7,
+      7,
+      0,
+      3,
+      5,
+      7,
+      7
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      7,
+      7
+     ]
+    ],
+    "expected": 7
+   }
+  ]
+ },
+ {
+  "id": "missing_number",
+  "title": "Missing Number In Range",
+  "difficulty": "easy",
+  "signature": "def missing_number(nums):",
+  "statement": "`nums` holds n different integers taken from the range 0..n inclusive, so exactly\none number of that range is absent. Return the absent number.",
+  "entry": "missing_number",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `missing_number` exactly as given; the tests call it.\ndef missing_number(nums):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      3,
+      0,
+      1
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      0,
+      1
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      9,
+      6,
+      4,
+      2,
+      3,
+      5,
+      7,
+      0,
+      1
+     ]
+    ],
+    "expected": 8
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      0
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      1
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     []
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      0,
+      2
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      0,
+      6,
+      4,
+      3,
+      1,
+      7,
+      2
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      6,
+      2,
+      9,
+      4,
+      5,
+      3,
+      0,
+      8,
+      7
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      0,
+      3,
+      7,
+      5,
+      2,
+      4,
+      6
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      5,
+      3,
+      6,
+      1,
+      7,
+      0,
+      2
+     ]
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      5,
+      4,
+      1,
+      2,
+      3
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      0,
+      3
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      2,
+      1
+     ]
+    ],
+    "expected": 0
+   }
+  ]
+ },
+ {
+  "id": "roman_to_int",
+  "title": "Roman Numeral To Integer",
+  "difficulty": "easy",
+  "signature": "def roman_to_int(s):",
+  "statement": "Convert the Roman numeral string `s` (using I, V, X, L, C, D, M, value 1 to 3999)\nto an integer. A smaller symbol written before a larger one is subtracted, as in\nIV = 4, IX = 9, XL = 40, XC = 90, CD = 400 and CM = 900.",
+  "entry": "roman_to_int",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `roman_to_int` exactly as given; the tests call it.\ndef roman_to_int(s):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "III"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "LVIII"
+    ],
+    "expected": 58
+   },
+   {
+    "args": [
+     "MCMXCIV"
+    ],
+    "expected": 1994
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "I"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "IV"
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "IX"
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     "XL"
+    ],
+    "expected": 40
+   },
+   {
+    "args": [
+     "MMMCMXCIX"
+    ],
+    "expected": 3999
+   },
+   {
+    "args": [
+     "CDXLIV"
+    ],
+    "expected": 444
+   },
+   {
+    "args": [
+     "DCCC"
+    ],
+    "expected": 800
+   },
+   {
+    "args": [
+     "MMMDCVIII"
+    ],
+    "expected": 3608
+   },
+   {
+    "args": [
+     "MCCCII"
+    ],
+    "expected": 1302
+   },
+   {
+    "args": [
+     "CMXXI"
+    ],
+    "expected": 921
+   },
+   {
+    "args": [
+     "CIX"
+    ],
+    "expected": 109
+   },
+   {
+    "args": [
+     "DXCI"
+    ],
+    "expected": 591
+   },
+   {
+    "args": [
+     "MMDCLXXXIV"
+    ],
+    "expected": 2684
+   },
+   {
+    "args": [
+     "DCXLI"
+    ],
+    "expected": 641
+   },
+   {
+    "args": [
+     "MMMCDXXII"
+    ],
+    "expected": 3422
+   },
+   {
+    "args": [
+     "MMDCXLVI"
+    ],
+    "expected": 2646
+   }
+  ]
+ },
+ {
+  "id": "longest_common_prefix",
+  "title": "Longest Shared Prefix",
+  "difficulty": "easy",
+  "signature": "def longest_common_prefix(strs):",
+  "statement": "Return the longest string that is a prefix of every string in the list `strs`.\nReturn an empty string if they share no prefix or the list is empty.",
+  "entry": "longest_common_prefix",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `longest_common_prefix` exactly as given; the tests call it.\ndef longest_common_prefix(strs):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      "flower",
+      "flow",
+      "flight"
+     ]
+    ],
+    "expected": "fl"
+   },
+   {
+    "args": [
+     [
+      "dog",
+      "racecar",
+      "car"
+     ]
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      "a"
+     ]
+    ],
+    "expected": "a"
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      ""
+     ]
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      "",
+      "b"
+     ]
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      "same",
+      "same"
+     ]
+    ],
+    "expected": "same"
+   },
+   {
+    "args": [
+     [
+      "ab",
+      "a"
+     ]
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     [
+      "interview",
+      "internet",
+      "interval",
+      "into"
+     ]
+    ],
+    "expected": "int"
+   },
+   {
+    "args": [
+     [
+      "x",
+      "y"
+     ]
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      "prefix",
+      "prefixes",
+      "prefixed"
+     ]
+    ],
+    "expected": "prefix"
+   },
+   {
+    "args": [
+     [
+      "",
+      "",
+      "bba",
+      "b"
+     ]
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     [
+      "aab",
+      "aabb",
+      "aabbc",
+      "aabcca"
+     ]
+    ],
+    "expected": "aab"
+   },
+   {
+    "args": [
+     [
+      "bc",
+      "b"
+     ]
+    ],
+    "expected": "b"
+   },
+   {
+    "args": [
+     [
+      "bbacab",
+      "bbaba"
+     ]
+    ],
+    "expected": "bba"
+   },
+   {
+    "args": [
+     [
+      "aaac",
+      "aaaaa"
+     ]
+    ],
+    "expected": "aaa"
+   },
+   {
+    "args": [
+     [
+      "bab"
+     ]
+    ],
+    "expected": "bab"
+   },
+   {
+    "args": [
+     [
+      "ab"
+     ]
+    ],
+    "expected": "ab"
+   },
+   {
+    "args": [
+     [
+      "bbacb"
+     ]
+    ],
+    "expected": "bbacb"
+   },
+   {
+    "args": [
+     [
+      "bb",
+      "bb"
+     ]
+    ],
+    "expected": "bb"
+   }
+  ]
+ },
+ {
+  "id": "group_anagrams",
+  "title": "Group Anagrams",
+  "difficulty": "medium",
+  "signature": "def group_anagrams(strs):",
+  "statement": "Group the words in the list `strs` so that words made of exactly the same letters\n(anagrams of each other) end up together. Return a list of groups, each group a\nlist of words. Groups and the words inside them may be in any order.",
+  "entry": "group_anagrams",
+  "kind": "function",
+  "comparator": "unordered_nested",
+  "stub": "# Keep the name `group_anagrams` exactly as given; the tests call it.\ndef group_anagrams(strs):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      "eat",
+      "tea",
+      "tan",
+      "ate",
+      "nat",
+      "bat"
+     ]
+    ],
+    "expected": [
+     [
+      "bat"
+     ],
+     [
+      "nat",
+      "tan"
+     ],
+     [
+      "ate",
+      "eat",
+      "tea"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      ""
+     ]
+    ],
+    "expected": [
+     [
+      ""
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "a"
+     ]
+    ],
+    "expected": [
+     [
+      "a"
+     ]
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      "ab",
+      "ba",
+      "ab"
+     ]
+    ],
+    "expected": [
+     [
+      "ab",
+      "ba",
+      "ab"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "abc",
+      "def",
+      "ghi"
+     ]
+    ],
+    "expected": [
+     [
+      "abc"
+     ],
+     [
+      "def"
+     ],
+     [
+      "ghi"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "",
+      ""
+     ]
+    ],
+    "expected": [
+     [
+      "",
+      ""
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "aab",
+      "aba",
+      "baa",
+      "abb"
+     ]
+    ],
+    "expected": [
+     [
+      "aab",
+      "aba",
+      "baa"
+     ],
+     [
+      "abb"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "bac",
+      "ab",
+      "c",
+      "",
+      "abc"
+     ]
+    ],
+    "expected": [
+     [
+      "bac",
+      "abc"
+     ],
+     [
+      "ab"
+     ],
+     [
+      "c"
+     ],
+     [
+      ""
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "ac"
+     ]
+    ],
+    "expected": [
+     [
+      "ac"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "baa",
+      "",
+      ""
+     ]
+    ],
+    "expected": [
+     [
+      "baa"
+     ],
+     [
+      "",
+      ""
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "cb",
+      "",
+      "bba",
+      "c",
+      "ca",
+      "cb"
+     ]
+    ],
+    "expected": [
+     [
+      "cb",
+      "cb"
+     ],
+     [
+      ""
+     ],
+     [
+      "bba"
+     ],
+     [
+      "c"
+     ],
+     [
+      "ca"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "",
+      "aca",
+      "",
+      "cb",
+      "",
+      ""
+     ]
+    ],
+    "expected": [
+     [
+      "",
+      "",
+      "",
+      ""
+     ],
+     [
+      "aca"
+     ],
+     [
+      "cb"
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      "b",
+      "bcc",
+      "caa",
+      "ac",
+      "bbc",
+      "bc",
+      "b"
+     ]
+    ],
+    "expected": [
+     [
+      "b",
+      "b"
+     ],
+     [
+      "bcc"
+     ],
+     [
+      "caa"
+     ],
+     [
+      "ac"
+     ],
+     [
+      "bbc"
+     ],
+     [
+      "bc"
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "id": "longest_substring_no_repeat",
+  "title": "Longest Substring Without Repeats",
+  "difficulty": "medium",
+  "signature": "def longest_substring_no_repeat(s):",
+  "statement": "Return the length of the longest contiguous substring of `s` in which no character\nappears more than once.",
+  "entry": "longest_substring_no_repeat",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `longest_substring_no_repeat` exactly as given; the tests call it.\ndef longest_substring_no_repeat(s):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "abcabcbb"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "bbbbb"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "pwwkew"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     ""
+    ],
+    "expected": 0
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "a"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "au"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "dvdf"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "abba"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "tmmzuxt"
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "abcdef"
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     " "
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "ddbdbd"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "daccbccc"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "dacbccaadadd"
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "dcbaccbaa"
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "ad"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "aacaddcc"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "bb"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "cbdbbddccb"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "bbcbbb"
+    ],
+    "expected": 2
+   }
+  ]
+ },
+ {
+  "id": "merge_intervals",
+  "title": "Merge Overlapping Intervals",
+  "difficulty": "medium",
+  "signature": "def merge_intervals(intervals):",
+  "statement": "`intervals` is a list of `[start, end]` pairs with start <= end, in any order. Merge\nevery group of intervals that overlap or touch (for example [1, 4] and [4, 5]) and\nreturn the resulting intervals sorted by start.",
+  "entry": "merge_intervals",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `merge_intervals` exactly as given; the tests call it.\ndef merge_intervals(intervals):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       8,
+       10
+      ],
+      [
+       15,
+       18
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      6
+     ],
+     [
+      8,
+      10
+     ],
+     [
+      15,
+      18
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       4
+      ],
+      [
+       4,
+       5
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      5
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       4,
+       7
+      ],
+      [
+       1,
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      7
+     ]
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       10
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       4,
+       5
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      10
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       5,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      5,
+      6
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       4
+      ],
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      4
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       3,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       5,
+       7
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       4,
+       6
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      7
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       4,
+       9
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      4,
+      9
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       10,
+       10
+      ],
+      [
+       15,
+       15
+      ],
+      [
+       16,
+       17
+      ],
+      [
+       6,
+       6
+      ],
+      [
+       8,
+       12
+      ],
+      [
+       15,
+       20
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      6,
+      6
+     ],
+     [
+      8,
+      12
+     ],
+     [
+      15,
+      20
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       2,
+       4
+      ],
+      [
+       20,
+       23
+      ],
+      [
+       20,
+       20
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      1
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      20,
+      23
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       10,
+       10
+      ],
+      [
+       5,
+       5
+      ],
+      [
+       14,
+       18
+      ],
+      [
+       11,
+       12
+      ],
+      [
+       2,
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      2,
+      4
+     ],
+     [
+      5,
+      5
+     ],
+     [
+      10,
+      10
+     ],
+     [
+      11,
+      12
+     ],
+     [
+      14,
+      18
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       19,
+       20
+      ],
+      [
+       17,
+       17
+      ],
+      [
+       7,
+       8
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       18,
+       22
+      ],
+      [
+       6,
+       11
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      2,
+      5
+     ],
+     [
+      6,
+      11
+     ],
+     [
+      17,
+      17
+     ],
+     [
+      18,
+      22
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       15,
+       16
+      ],
+      [
+       19,
+       23
+      ],
+      [
+       1,
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      4
+     ],
+     [
+      15,
+      16
+     ],
+     [
+      19,
+      23
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       6
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      1,
+      6
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       13,
+       13
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       19,
+       24
+      ],
+      [
+       18,
+       20
+      ],
+      [
+       9,
+       9
+      ],
+      [
+       17,
+       17
+      ],
+      [
+       17,
+       21
+      ]
+     ]
+    ],
+    "expected": [
+     [
+      2,
+      4
+     ],
+     [
+      9,
+      9
+     ],
+     [
+      13,
+      13
+     ],
+     [
+      17,
+      24
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "id": "product_except_self",
+  "title": "Product Of All Other Elements",
+  "difficulty": "medium",
+  "signature": "def product_except_self(nums):",
+  "statement": "Return a list `out` of the same length as `nums` where `out[i]` is the product of\nevery element of `nums` except `nums[i]`. `nums` has at least two elements and may\ncontain zeros and negative numbers.",
+  "entry": "product_except_self",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `product_except_self` exactly as given; the tests call it.\ndef product_except_self(nums):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4
+     ]
+    ],
+    "expected": [
+     24,
+     12,
+     8,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      1,
+      0,
+      -3,
+      3
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     9,
+     0,
+     0
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      0,
+      0
+     ]
+    ],
+    "expected": [
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      1
+     ]
+    ],
+    "expected": [
+     1,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      3
+     ]
+    ],
+    "expected": [
+     3,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      4,
+      5
+     ]
+    ],
+    "expected": [
+     20,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      -3,
+      -4
+     ]
+    ],
+    "expected": [
+     12,
+     8,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      0,
+      0,
+      2
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      -2,
+      1,
+      -3,
+      -3,
+      -3,
+      0
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     -54
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      3,
+      0,
+      3,
+      2,
+      -2,
+      -2
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     144,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      0
+     ]
+    ],
+    "expected": [
+     0,
+     -3
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      -3,
+      -2,
+      3,
+      -3,
+      3,
+      -3
+     ]
+    ],
+    "expected": [
+     486,
+     324,
+     486,
+     -324,
+     324,
+     -324,
+     324
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      -1,
+      -1,
+      1,
+      1
+     ]
+    ],
+    "expected": [
+     1,
+     -2,
+     -2,
+     2,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      3,
+      -3
+     ]
+    ],
+    "expected": [
+     -9,
+     3,
+     -3
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      1,
+      0
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      -2,
+      -3,
+      3,
+      1,
+      2,
+      -3,
+      2
+     ]
+    ],
+    "expected": [
+     -216,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      -2,
+      2
+     ]
+    ],
+    "expected": [
+     -4,
+     4,
+     -4
+    ]
+   }
+  ]
+ },
+ {
+  "id": "coin_change",
+  "title": "Fewest Coins",
+  "difficulty": "medium",
+  "signature": "def coin_change(coins, amount):",
+  "statement": "`coins` lists the available coin values (positive integers); you may use each value\nany number of times. Return the smallest number of coins that add up to exactly\n`amount`, or -1 if that amount cannot be formed. An amount of 0 needs 0 coins.",
+  "entry": "coin_change",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `coin_change` exactly as given; the tests call it.\ndef coin_change(coins, amount):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      2,
+      5
+     ],
+     11
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      2
+     ],
+     3
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     0
+    ],
+    "expected": 0
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      2
+     ],
+     1
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     7
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      2,
+      5,
+      10,
+      1
+     ],
+     27
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      186,
+      419,
+      83,
+      408
+     ],
+     6249
+    ],
+    "expected": 20
+   },
+   {
+    "args": [
+     [
+      3,
+      7
+     ],
+     5
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1,
+      3,
+      4
+     ],
+     6
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      5
+     ],
+     0
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      11,
+      7,
+      6
+     ],
+     12
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      7,
+      5,
+      9,
+      8
+     ],
+     45
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      11
+     ],
+     41
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      2,
+      12,
+      3
+     ],
+     40
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      7,
+      3,
+      11,
+      2
+     ],
+     17
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      7,
+      12
+     ],
+     21
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      1,
+      3
+     ],
+     31
+    ],
+    "expected": 11
+   },
+   {
+    "args": [
+     [
+      5,
+      3
+     ],
+     1
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     42
+    ],
+    "expected": 42
+   }
+  ]
+ },
+ {
+  "id": "num_islands",
+  "title": "Count Islands",
+  "difficulty": "medium",
+  "signature": "def num_islands(grid):",
+  "statement": "`grid` is a non-empty rectangular list of rows containing the integers 1 (land) and\n0 (water). An island is a group of land cells connected horizontally or vertically\n(not diagonally). Return the number of islands.",
+  "entry": "num_islands",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `num_islands` exactly as given; the tests call it.\ndef num_islands(grid):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1,
+       1,
+       0
+      ],
+      [
+       1,
+       1,
+       0,
+       1,
+       0
+      ],
+      [
+       1,
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       1,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      [
+       0
+      ]
+     ]
+    ],
+    "expected": 0
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      [
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       0,
+       1,
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      [
+       1
+      ],
+      [
+       0
+      ],
+      [
+       1
+      ]
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1
+      ],
+      [
+       0,
+       0,
+       1
+      ],
+      [
+       1,
+       1,
+       1
+      ],
+      [
+       1,
+       0,
+       0
+      ],
+      [
+       1,
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1,
+       0
+      ],
+      [
+       1,
+       1,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       1,
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      [
+       1
+      ],
+      [
+       0
+      ],
+      [
+       0
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       0,
+       0,
+       1
+      ],
+      [
+       1,
+       0,
+       1,
+       0
+      ],
+      [
+       1,
+       1,
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1
+      ],
+      [
+       1,
+       0,
+       1
+      ],
+      [
+       1,
+       0,
+       0
+      ],
+      [
+       1,
+       1,
+       0
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       1,
+       1,
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1,
+       1,
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": 2
+   }
+  ]
+ },
+ {
+  "id": "top_k_frequent",
+  "title": "Most Frequent Values",
+  "difficulty": "medium",
+  "signature": "def top_k_frequent(nums, k):",
+  "statement": "Return the `k` values that occur most often in the list `nums`, in any order. The\nanswer is always unique: no tie crosses the k-th position.",
+  "entry": "top_k_frequent",
+  "kind": "function",
+  "comparator": "unordered",
+  "stub": "# Keep the name `top_k_frequent` exactly as given; the tests call it.\ndef top_k_frequent(nums, k):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      1,
+      1,
+      2,
+      2,
+      3
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     1
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      4,
+      4,
+      6,
+      6,
+      7,
+      7,
+      7,
+      7
+     ],
+     1
+    ],
+    "expected": [
+     7
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      5,
+      5,
+      6
+     ],
+     1
+    ],
+    "expected": [
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      -1,
+      2,
+      2,
+      2,
+      3
+     ],
+     2
+    ],
+    "expected": [
+     2,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3
+     ],
+     3
+    ],
+    "expected": [
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      9,
+      9,
+      9,
+      8,
+      8,
+      7
+     ],
+     3
+    ],
+    "expected": [
+     9,
+     8,
+     7
+    ]
+   },
+   {
+    "args": [
+     [
+      5
+     ],
+     1
+    ],
+    "expected": [
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      -3
+     ],
+     1
+    ],
+    "expected": [
+     -3
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      2,
+      2
+     ],
+     1
+    ],
+    "expected": [
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      -5,
+      4,
+      2,
+      2,
+      4,
+      2,
+      -5,
+      -5,
+      5,
+      -5,
+      -5,
+      5,
+      4,
+      -5,
+      4,
+      4,
+      2,
+      -5,
+      4,
+      -5
+     ],
+     3
+    ],
+    "expected": [
+     -5,
+     4,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0
+     ],
+     1
+    ],
+    "expected": [
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      -5,
+      -5,
+      -5,
+      -1,
+      -5,
+      6,
+      -5,
+      6,
+      -1,
+      -1,
+      -1,
+      -5,
+      -1,
+      -4,
+      -4,
+      -4,
+      -5
+     ],
+     3
+    ],
+    "expected": [
+     -5,
+     -1,
+     -4
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      7,
+      -3,
+      -3,
+      7,
+      -3,
+      -3,
+      1,
+      7,
+      -3,
+      1,
+      7,
+      7,
+      7,
+      -3,
+      7,
+      7,
+      -3
+     ],
+     3
+    ],
+    "expected": [
+     7,
+     -3,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      -2,
+      1,
+      2,
+      2,
+      -2,
+      1,
+      -2,
+      1,
+      -2,
+      -2,
+      -2
+     ],
+     3
+    ],
+    "expected": [
+     -2,
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      1,
+      -2,
+      1,
+      -4,
+      -2,
+      -4,
+      -4,
+      2,
+      -2,
+      -2,
+      -3,
+      2,
+      -4,
+      -4,
+      -2,
+      1,
+      2,
+      -2,
+      1,
+      -2,
+      -2,
+      -4
+     ],
+     4
+    ],
+    "expected": [
+     -2,
+     -4,
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "id": "three_sum",
+  "title": "Triplets Summing To Zero",
+  "difficulty": "medium",
+  "signature": "def three_sum(nums):",
+  "statement": "Return every distinct triplet of values from `nums`, taken from three different\npositions, that adds up to 0. Each triplet is a list of three numbers. Do not\nrepeat a triplet that uses the same three values; the triplets and the numbers\ninside them may be in any order.",
+  "entry": "three_sum",
+  "kind": "function",
+  "comparator": "unordered_nested",
+  "stub": "# Keep the name `three_sum` exactly as given; the tests call it.\ndef three_sum(nums):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      -1,
+      0,
+      1,
+      2,
+      -1,
+      -4
+     ]
+    ],
+    "expected": [
+     [
+      -1,
+      -1,
+      2
+     ],
+     [
+      -1,
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      1,
+      1
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      0
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      0,
+      1,
+      1,
+      2
+     ]
+    ],
+    "expected": [
+     [
+      -2,
+      0,
+      2
+     ],
+     [
+      -2,
+      1,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      -2,
+      -1
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      3,
+      -1,
+      -2,
+      -1,
+      2,
+      0,
+      -3
+     ]
+    ],
+    "expected": [
+     [
+      -3,
+      0,
+      3
+     ],
+     [
+      -2,
+      -1,
+      3
+     ],
+     [
+      -2,
+      0,
+      2
+     ],
+     [
+      -1,
+      -1,
+      2
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -4,
+      -2,
+      -2,
+      -2,
+      0,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      4,
+      6,
+      6
+     ]
+    ],
+    "expected": [
+     [
+      -4,
+      -2,
+      6
+     ],
+     [
+      -4,
+      0,
+      4
+     ],
+     [
+      -4,
+      1,
+      3
+     ],
+     [
+      -4,
+      2,
+      2
+     ],
+     [
+      -2,
+      -2,
+      4
+     ],
+     [
+      -2,
+      0,
+      2
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -5,
+      -4,
+      2,
+      4,
+      0,
+      0,
+      0,
+      -2
+     ]
+    ],
+    "expected": [
+     [
+      -4,
+      0,
+      4
+     ],
+     [
+      -2,
+      0,
+      2
+     ],
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      -3,
+      -5,
+      -3,
+      -4
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      -3,
+      5,
+      0,
+      0,
+      4,
+      1,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      2
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      4,
+      5,
+      4,
+      -2,
+      1,
+      -4
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      5,
+      -1,
+      -4,
+      -4,
+      0,
+      -4,
+      4,
+      2,
+      -3,
+      -3
+     ]
+    ],
+    "expected": [
+     [
+      -4,
+      -1,
+      5
+     ],
+     [
+      -4,
+      0,
+      4
+     ],
+     [
+      -3,
+      -1,
+      4
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      -5,
+      -2,
+      3,
+      -4,
+      -1
+     ]
+    ],
+    "expected": [
+     [
+      -2,
+      -1,
+      3
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      1,
+      5,
+      0,
+      -1,
+      -5,
+      4
+     ]
+    ],
+    "expected": [
+     [
+      -5,
+      0,
+      5
+     ],
+     [
+      -5,
+      1,
+      4
+     ],
+     [
+      -1,
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      -1,
+      4,
+      -4,
+      1,
+      2
+     ]
+    ],
+    "expected": [
+     [
+      -4,
+      1,
+      3
+     ]
+    ]
+   }
+  ]
+ },
+ {
+  "id": "lru_cache",
+  "title": "Least Recently Used Cache",
+  "difficulty": "medium",
+  "signature": "class LRUCache:",
+  "statement": "Write a class `LRUCache` holding integer keys and values:\n\n- `LRUCache(capacity)` creates an empty cache that keeps at most `capacity` keys\n  (capacity >= 1).\n- `get(key)` returns the value stored for `key`, or -1 if the key is absent.\n- `put(key, value)` stores or updates the value. If this makes the cache exceed its\n  capacity, remove the least recently used key.\n\nBoth a successful `get` and any `put` count as using that key. Each test is a list of\nmethod names and a list of their arguments; `put` returns None.",
+  "entry": "LRUCache",
+  "kind": "ops",
+  "comparator": "exact",
+  "stub": "# Keep the class and method names exactly as given; the tests call them.\nclass LRUCache:\n    def __init__(self, capacity):\n        pass  # TODO\n\n    def get(self, key):\n        pass  # TODO\n\n    def put(self, key, value):\n        pass  # TODO\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "put",
+      "get",
+      "put",
+      "get",
+      "put",
+      "get",
+      "get",
+      "get"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       1
+      ],
+      [
+       3,
+       3
+      ],
+      [
+       2
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       1
+      ],
+      [
+       3
+      ],
+      [
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     null,
+     1,
+     null,
+     -1,
+     null,
+     -1,
+     3,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "get",
+      "put",
+      "get",
+      "get"
+     ],
+     [
+      [
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       2
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     1,
+     null,
+     -1,
+     2
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get"
+     ],
+     [
+      [
+       1
+      ],
+      [
+       5
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "put",
+      "get",
+      "get"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       9
+      ],
+      [
+       1
+      ],
+      [
+       2
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     null,
+     9,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "put",
+      "put",
+      "get",
+      "get",
+      "get"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     null,
+     null,
+     5,
+     2,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "put",
+      "get",
+      "put",
+      "put",
+      "get",
+      "get",
+      "get"
+     ],
+     [
+      [
+       3
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       1
+      ],
+      [
+       3,
+       3
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       2
+      ],
+      [
+       1
+      ],
+      [
+       4
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     null,
+     1,
+     null,
+     null,
+     -1,
+     1,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "get",
+      "get",
+      "get",
+      "get",
+      "put",
+      "get"
+     ],
+     [
+      [
+       3
+      ],
+      [
+       2,
+       59
+      ],
+      [
+       0
+      ],
+      [
+       1
+      ],
+      [
+       3
+      ],
+      [
+       2
+      ],
+      [
+       4,
+       95
+      ],
+      [
+       2
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     -1,
+     -1,
+     -1,
+     59,
+     null,
+     59
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "put",
+      "get"
+     ],
+     [
+      [
+       1
+      ],
+      [
+       1,
+       84
+      ],
+      [
+       2,
+       91
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     null,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get",
+      "get",
+      "get",
+      "put",
+      "put",
+      "put",
+      "get",
+      "get",
+      "get",
+      "get",
+      "get",
+      "put",
+      "get",
+      "get"
+     ],
+     [
+      [
+       3
+      ],
+      [
+       4
+      ],
+      [
+       1
+      ],
+      [
+       3
+      ],
+      [
+       3,
+       58
+      ],
+      [
+       3,
+       47
+      ],
+      [
+       3,
+       81
+      ],
+      [
+       0
+      ],
+      [
+       0
+      ],
+      [
+       4
+      ],
+      [
+       1
+      ],
+      [
+       4
+      ],
+      [
+       4,
+       12
+      ],
+      [
+       2
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1,
+     -1,
+     -1,
+     null,
+     null,
+     null,
+     -1,
+     -1,
+     -1,
+     -1,
+     -1,
+     null,
+     -1,
+     81
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "get",
+      "get",
+      "get",
+      "put",
+      "get",
+      "get",
+      "put",
+      "get",
+      "put"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       4,
+       71
+      ],
+      [
+       4
+      ],
+      [
+       0
+      ],
+      [
+       1
+      ],
+      [
+       4,
+       48
+      ],
+      [
+       4
+      ],
+      [
+       0
+      ],
+      [
+       1,
+       31
+      ],
+      [
+       3
+      ],
+      [
+       1,
+       31
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     71,
+     -1,
+     -1,
+     null,
+     48,
+     -1,
+     null,
+     -1,
+     null
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "put",
+      "get",
+      "get",
+      "put",
+      "put",
+      "put",
+      "put",
+      "put"
+     ],
+     [
+      [
+       1
+      ],
+      [
+       4,
+       57
+      ],
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       3,
+       72
+      ],
+      [
+       3,
+       17
+      ],
+      [
+       4,
+       51
+      ],
+      [
+       2,
+       74
+      ],
+      [
+       2,
+       61
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     null,
+     -1,
+     -1,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get",
+      "get",
+      "get",
+      "get",
+      "get"
+     ],
+     [
+      [
+       1
+      ],
+      [
+       2
+      ],
+      [
+       1
+      ],
+      [
+       1
+      ],
+      [
+       1
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1,
+     -1,
+     -1,
+     -1,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get",
+      "put",
+      "put",
+      "put",
+      "get",
+      "put",
+      "get",
+      "put",
+      "get",
+      "get",
+      "get",
+      "put",
+      "put",
+      "put"
+     ],
+     [
+      [
+       3
+      ],
+      [
+       3
+      ],
+      [
+       4,
+       95
+      ],
+      [
+       3,
+       21
+      ],
+      [
+       4,
+       33
+      ],
+      [
+       3
+      ],
+      [
+       2,
+       92
+      ],
+      [
+       4
+      ],
+      [
+       0,
+       23
+      ],
+      [
+       1
+      ],
+      [
+       0
+      ],
+      [
+       3
+      ],
+      [
+       1,
+       88
+      ],
+      [
+       2,
+       76
+      ],
+      [
+       1,
+       5
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1,
+     null,
+     null,
+     null,
+     21,
+     null,
+     33,
+     null,
+     -1,
+     23,
+     -1,
+     null,
+     null,
+     null
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get",
+      "get",
+      "get",
+      "get",
+      "get",
+      "get",
+      "get",
+      "put",
+      "put",
+      "get",
+      "get",
+      "put",
+      "get"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       0
+      ],
+      [
+       4
+      ],
+      [
+       1
+      ],
+      [
+       1
+      ],
+      [
+       0
+      ],
+      [
+       1
+      ],
+      [
+       1
+      ],
+      [
+       2,
+       64
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       0
+      ],
+      [
+       0
+      ],
+      [
+       2,
+       49
+      ],
+      [
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1,
+     -1,
+     -1,
+     -1,
+     -1,
+     -1,
+     -1,
+     null,
+     null,
+     6,
+     6,
+     null,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      "LRUCache",
+      "get",
+      "get",
+      "put",
+      "put"
+     ],
+     [
+      [
+       2
+      ],
+      [
+       3
+      ],
+      [
+       0
+      ],
+      [
+       0,
+       58
+      ],
+      [
+       2,
+       85
+      ]
+     ]
+    ],
+    "expected": [
+     null,
+     -1,
+     -1,
+     null,
+     null
+    ]
+   }
+  ]
+ },
+ {
+  "id": "course_schedule",
+  "title": "Can All Courses Be Taken",
+  "difficulty": "medium",
+  "signature": "def course_schedule(num_courses, prerequisites):",
+  "statement": "There are `num_courses` courses numbered 0 to num_courses - 1. Each pair `[a, b]` in\n`prerequisites` means course b must be finished before course a. Return True if it\nis possible to finish every course, and False if the requirements contain a cycle.",
+  "entry": "course_schedule",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `course_schedule` exactly as given; the tests call it.\ndef course_schedule(num_courses, prerequisites):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     2,
+     [
+      [
+       1,
+       0
+      ]
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     2,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     4,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ]
+    ],
+    "expected": true
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     1,
+     []
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     3,
+     []
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     3,
+     [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       0
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     4,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     2,
+     [
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     5,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       4,
+       3
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     3,
+     [
+      [
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     2,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       1
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     6,
+     []
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     1,
+     [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     2,
+     [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     1,
+     [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     5,
+     [
+      [
+       1,
+       2
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       4,
+       4
+      ],
+      [
+       0,
+       4
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     4,
+     [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     2,
+     [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": false
+   }
+  ]
+ },
+ {
+  "id": "trapping_rain_water",
+  "title": "Trapped Rain Water",
+  "difficulty": "hard",
+  "signature": "def trapping_rain_water(heights):",
+  "statement": "`heights` gives the heights of adjacent bars of width 1. After rain, water collects\nin the dips between taller bars. Return the total number of units of water held.",
+  "entry": "trapping_rain_water",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `trapping_rain_water` exactly as given; the tests call it.\ndef trapping_rain_water(heights):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      0,
+      1,
+      0,
+      2,
+      1,
+      0,
+      1,
+      3,
+      2,
+      1,
+      2,
+      1
+     ]
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [
+      4,
+      2,
+      0,
+      3,
+      2,
+      5
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     []
+    ],
+    "expected": 0
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      3
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      2,
+      0,
+      2
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      5,
+      4,
+      3,
+      2,
+      1
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      3,
+      0,
+      0,
+      0,
+      3
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      5,
+      0,
+      1,
+      0,
+      5,
+      0,
+      2
+     ]
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      7,
+      8,
+      5,
+      8
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      4,
+      5,
+      8,
+      7,
+      4
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      6,
+      1,
+      1,
+      2,
+      1,
+      8,
+      4,
+      8,
+      0
+     ]
+    ],
+    "expected": 23
+   },
+   {
+    "args": [
+     [
+      3,
+      2,
+      0,
+      5,
+      0,
+      1,
+      7,
+      1,
+      6,
+      6,
+      1
+     ]
+    ],
+    "expected": 18
+   },
+   {
+    "args": [
+     []
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      0,
+      8,
+      7,
+      8
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      8,
+      8,
+      1,
+      4,
+      8,
+      1
+     ]
+    ],
+    "expected": 11
+   },
+   {
+    "args": [
+     [
+      6,
+      3,
+      4,
+      2,
+      5,
+      4
+     ]
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [
+      7,
+      2,
+      7,
+      4,
+      4,
+      1,
+      1,
+      1,
+      0,
+      3
+     ]
+    ],
+    "expected": 14
+   }
+  ]
+ },
+ {
+  "id": "median_two_sorted",
+  "title": "Median Of Two Sorted Lists",
+  "difficulty": "hard",
+  "signature": "def median_two_sorted(a, b):",
+  "statement": "`a` and `b` are lists of integers, each sorted in non-decreasing order, and at least\none of them is non-empty. Return the median of all the values taken together, as a\nfloat. For an even total count, the median is the average of the two middle values.",
+  "entry": "median_two_sorted",
+  "kind": "function",
+  "comparator": "float",
+  "stub": "# Keep the name `median_two_sorted` exactly as given; the tests call it.\ndef median_two_sorted(a, b):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      3
+     ],
+     [
+      2
+     ]
+    ],
+    "expected": 2.0
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "expected": 2.5
+   },
+   {
+    "args": [
+     [],
+     [
+      1
+     ]
+    ],
+    "expected": 1.0
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      2
+     ],
+     []
+    ],
+    "expected": 2.0
+   },
+   {
+    "args": [
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "expected": 1.0
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3
+     ],
+     [
+      4,
+      5,
+      6,
+      7
+     ]
+    ],
+    "expected": 4.0
+   },
+   {
+    "args": [
+     [
+      -5,
+      -3
+     ],
+     [
+      -4
+     ]
+    ],
+    "expected": -4.0
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     [
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "expected": 3.5
+   },
+   {
+    "args": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      0
+     ]
+    ],
+    "expected": 0.0
+   },
+   {
+    "args": [
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "expected": 2.5
+   },
+   {
+    "args": [
+     [
+      -9,
+      -8,
+      7,
+      8
+     ],
+     [
+      -6,
+      3,
+      7,
+      7
+     ]
+    ],
+    "expected": 5.0
+   },
+   {
+    "args": [
+     [
+      -9,
+      -4,
+      -3,
+      -1,
+      -1,
+      1
+     ],
+     [
+      -5,
+      1
+     ]
+    ],
+    "expected": -2.0
+   },
+   {
+    "args": [
+     [
+      -6,
+      -1,
+      8
+     ],
+     [
+      -8,
+      -8,
+      -1,
+      2,
+      5
+     ]
+    ],
+    "expected": -1.0
+   },
+   {
+    "args": [
+     [
+      3
+     ],
+     [
+      -1
+     ]
+    ],
+    "expected": 1.0
+   },
+   {
+    "args": [
+     [
+      -8,
+      -6,
+      2,
+      5,
+      8
+     ],
+     [
+      -6,
+      -3,
+      2
+     ]
+    ],
+    "expected": -0.5
+   },
+   {
+    "args": [
+     [
+      -7,
+      -3,
+      3,
+      6
+     ],
+     [
+      1
+     ]
+    ],
+    "expected": 1.0
+   },
+   {
+    "args": [
+     [
+      -6,
+      -5,
+      0
+     ],
+     [
+      -5,
+      5
+     ]
+    ],
+    "expected": -5.0
+   },
+   {
+    "args": [
+     [
+      -6,
+      -6,
+      7
+     ],
+     [
+      -5
+     ]
+    ],
+    "expected": -5.5
+   },
+   {
+    "args": [
+     [
+      -6,
+      4,
+      6,
+      7,
+      7,
+      9
+     ],
+     [
+      -8,
+      -4,
+      -3
+     ]
+    ],
+    "expected": 4.0
+   }
+  ]
+ },
+ {
+  "id": "edit_distance",
+  "title": "Edit Distance",
+  "difficulty": "hard",
+  "signature": "def edit_distance(a, b):",
+  "statement": "Return the smallest number of single-character edits that turn string `a` into\nstring `b`. An edit inserts one character, deletes one character, or replaces one\ncharacter with another.",
+  "entry": "edit_distance",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `edit_distance` exactly as given; the tests call it.\ndef edit_distance(a, b):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "horse",
+     "ros"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "intention",
+     "execution"
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "",
+     "abc"
+    ],
+    "expected": 3
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "",
+     ""
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "a",
+     "a"
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "a",
+     "b"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "abc",
+     ""
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "kitten",
+     "sitting"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "sunday",
+     "saturday"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "abcdef",
+     "azced"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "ccbabb",
+     "ababc"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "acabb",
+     "caacab"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "cb",
+     "bb"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "aaaac",
+     "bbcb"
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "c",
+     "ccabbbc"
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     "aaab",
+     "b"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "cb",
+     "c"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "cbaaaa",
+     "b"
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "cacaacb",
+     "bc"
+    ],
+    "expected": 6
+   }
+  ]
+ },
+ {
+  "id": "min_window_substring",
+  "title": "Smallest Covering Window",
+  "difficulty": "hard",
+  "signature": "def min_window_substring(s, t):",
+  "statement": "Return the shortest contiguous substring of `s` that contains every character of\n`t`, counting repeats (if `t` has two 'a's the window needs at least two). If\nseveral windows share the shortest length, return the leftmost one. Return an empty\nstring if no window qualifies. Matching is case-sensitive.",
+  "entry": "min_window_substring",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `min_window_substring` exactly as given; the tests call it.\ndef min_window_substring(s, t):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "ADOBECODEBANC",
+     "ABC"
+    ],
+    "expected": "BANC"
+   },
+   {
+    "args": [
+     "a",
+     "a"
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     "a",
+     "aa"
+    ],
+    "expected": ""
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "",
+     "a"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "ab",
+     "b"
+    ],
+    "expected": "b"
+   },
+   {
+    "args": [
+     "aa",
+     "aa"
+    ],
+    "expected": "aa"
+   },
+   {
+    "args": [
+     "abc",
+     "cba"
+    ],
+    "expected": "abc"
+   },
+   {
+    "args": [
+     "bba",
+     "ab"
+    ],
+    "expected": "ba"
+   },
+   {
+    "args": [
+     "cabwefgewcwaefgcf",
+     "cae"
+    ],
+    "expected": "cwae"
+   },
+   {
+    "args": [
+     "aXbXc",
+     "abc"
+    ],
+    "expected": "aXbXc"
+   },
+   {
+    "args": [
+     "abab",
+     "ab"
+    ],
+    "expected": "ab"
+   },
+   {
+    "args": [
+     "b",
+     "bcc"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "acbba",
+     "a"
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     "accccccca",
+     "aa"
+    ],
+    "expected": "accccccca"
+   },
+   {
+    "args": [
+     "cccabacc",
+     "acc"
+    ],
+    "expected": "cca"
+   },
+   {
+    "args": [
+     "cacbac",
+     "a"
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     "acaa",
+     "ac"
+    ],
+    "expected": "ac"
+   },
+   {
+    "args": [
+     "bacc",
+     "ccc"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "acc",
+     "bcab"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "bcbcc",
+     "ccab"
+    ],
+    "expected": ""
+   }
+  ]
+ },
+ {
+  "id": "largest_rectangle_histogram",
+  "title": "Largest Rectangle In Histogram",
+  "difficulty": "hard",
+  "signature": "def largest_rectangle_histogram(heights):",
+  "statement": "`heights` gives the heights of adjacent histogram bars of width 1. Return the area\nof the largest axis-aligned rectangle that fits entirely inside the bars. An empty\nlist has area 0.",
+  "entry": "largest_rectangle_histogram",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `largest_rectangle_histogram` exactly as given; the tests call it.\ndef largest_rectangle_histogram(heights):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      2,
+      1,
+      5,
+      6,
+      2,
+      3
+     ]
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     [
+      2,
+      4
+     ]
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      1
+     ]
+    ],
+    "expected": 1
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      0
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      3,
+      3,
+      3
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      5,
+      4,
+      3,
+      2,
+      1
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      2,
+      1,
+      2
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      4,
+      2,
+      0,
+      3,
+      2,
+      5
+     ]
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [
+      6,
+      2,
+      5,
+      4,
+      5,
+      1,
+      6
+     ]
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      1,
+      3,
+      2,
+      1,
+      2,
+      1,
+      7,
+      0,
+      1
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      6,
+      3,
+      8,
+      2,
+      6,
+      3,
+      5,
+      4
+     ]
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      7,
+      5,
+      1,
+      4,
+      5,
+      3,
+      5
+     ]
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      2,
+      0,
+      1,
+      8,
+      6,
+      0
+     ]
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      3,
+      8,
+      1,
+      3,
+      0,
+      7,
+      5,
+      2,
+      6,
+      3
+     ]
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     [
+      4,
+      0,
+      0,
+      4,
+      1,
+      3,
+      5,
+      7,
+      7,
+      3
+     ]
+    ],
+    "expected": 15
+   },
+   {
+    "args": [
+     [
+      4,
+      1,
+      7,
+      6,
+      4,
+      5,
+      2,
+      0,
+      5,
+      1
+     ]
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      5,
+      0,
+      1,
+      6,
+      6
+     ]
+    ],
+    "expected": 12
+   }
+  ]
+ },
+ {
+  "id": "n_queens_count",
+  "title": "Count N-Queens Placements",
+  "difficulty": "hard",
+  "signature": "def n_queens_count(n):",
+  "statement": "Return the number of ways to place `n` chess queens on an n x n board so that no\ntwo queens share a row, a column or a diagonal (1 <= n <= 9).",
+  "entry": "n_queens_count",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `n_queens_count` exactly as given; the tests call it.\ndef n_queens_count(n):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     1
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     4
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     6
+    ],
+    "expected": 4
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     2
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     3
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     5
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     7
+    ],
+    "expected": 40
+   },
+   {
+    "args": [
+     8
+    ],
+    "expected": 92
+   },
+   {
+    "args": [
+     9
+    ],
+    "expected": 352
+   }
+  ]
+ },
+ {
+  "id": "word_ladder_length",
+  "title": "Shortest Word Ladder",
+  "difficulty": "hard",
+  "signature": "def word_ladder_length(begin, end, word_list):",
+  "statement": "A ladder goes from the word `begin` to the word `end` by changing one letter at a\ntime, and every word after `begin` must appear in `word_list`. All words have the\nsame length and use lowercase letters. Return the number of words in the shortest\nladder, counting both `begin` and `end`, or 0 if there is no ladder.",
+  "entry": "word_ladder_length",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `word_ladder_length` exactly as given; the tests call it.\ndef word_ladder_length(begin, end, word_list):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "hit",
+     "cog",
+     [
+      "hot",
+      "dot",
+      "dog",
+      "lot",
+      "log",
+      "cog"
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "hit",
+     "cog",
+     [
+      "hot",
+      "dot",
+      "dog",
+      "lot",
+      "log"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "a",
+     "c",
+     [
+      "a",
+      "b",
+      "c"
+     ]
+    ],
+    "expected": 2
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "hot",
+     "dog",
+     [
+      "hot",
+      "dog"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "hot",
+     "dot",
+     [
+      "dot"
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "hit",
+     "hot",
+     [
+      "hot",
+      "hit"
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "aaa",
+     "bbb",
+     [
+      "aab",
+      "abb",
+      "bbb",
+      "baa",
+      "bba"
+     ]
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "lost",
+     "cost",
+     [
+      "most",
+      "fist",
+      "lost",
+      "cost",
+      "fish"
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "leet",
+     "code",
+     [
+      "lest",
+      "leet",
+      "lose",
+      "code",
+      "lode",
+      "robe",
+      "lost"
+     ]
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     "qa",
+     "sq",
+     [
+      "si",
+      "go",
+      "se",
+      "cm",
+      "so",
+      "ph",
+      "mt",
+      "db",
+      "mb",
+      "sb",
+      "kr",
+      "ln",
+      "tm",
+      "le",
+      "av",
+      "sm",
+      "ar",
+      "ci",
+      "ca",
+      "br",
+      "ti",
+      "ba",
+      "to",
+      "ra",
+      "fa",
+      "yo",
+      "ow",
+      "sn",
+      "ya",
+      "cr",
+      "po",
+      "fe",
+      "ho",
+      "ma",
+      "re",
+      "or",
+      "rn",
+      "au",
+      "ur",
+      "rh",
+      "sr",
+      "tc",
+      "lt",
+      "lo",
+      "as",
+      "fr",
+      "nb",
+      "yb",
+      "if",
+      "pb",
+      "ge",
+      "th",
+      "pm",
+      "rb",
+      "sh",
+      "co",
+      "ga",
+      "li",
+      "ha",
+      "hz",
+      "no",
+      "bi",
+      "di",
+      "hi",
+      "qa",
+      "pi",
+      "os",
+      "uh",
+      "wm",
+      "an",
+      "me",
+      "mo",
+      "na",
+      "la",
+      "st",
+      "er",
+      "sc",
+      "ne",
+      "mn",
+      "mi",
+      "am",
+      "ex",
+      "pt",
+      "io",
+      "be",
+      "fm",
+      "ta",
+      "tb",
+      "ni",
+      "mr",
+      "pa",
+      "he",
+      "lr",
+      "sq",
+      "ye"
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "baa",
+     "caa",
+     [
+      "aab",
+      "baa",
+      "bcb",
+      "bcc",
+      "caa"
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "aac",
+     "ccc",
+     [
+      "aaa",
+      "aac",
+      "aca",
+      "acb",
+      "acc",
+      "bab",
+      "bbb",
+      "bcb",
+      "cab",
+      "cca",
+      "ccb"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "aab",
+     "aab",
+     [
+      "aab",
+      "acb",
+      "cac",
+      "cbb",
+      "ccb",
+      "ccc"
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "bcc",
+     "aba",
+     [
+      "aac",
+      "aba",
+      "acc",
+      "bbb",
+      "bca",
+      "bcc",
+      "cbc",
+      "cca",
+      "ccc"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "acb",
+     "aaa",
+     [
+      "aaa",
+      "acb",
+      "bac"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "cca",
+     "bba",
+     [
+      "bba",
+      "bcb",
+      "cca"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "baa",
+     "bbc",
+     [
+      "aaa",
+      "aac",
+      "abb",
+      "acc",
+      "baa",
+      "bac",
+      "cbb",
+      "cbc",
+      "ccc"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "acc",
+     "cba",
+     [
+      "aab",
+      "acb",
+      "acc",
+      "baa",
+      "bbc",
+      "cab",
+      "cba",
+      "cca"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     "bbc",
+     "cbb",
+     [
+      "bbc",
+      "cca"
+     ]
+    ],
+    "expected": 0
+   }
+  ]
+ },
+ {
+  "id": "regex_matching",
+  "title": "Regular Expression Match",
+  "difficulty": "hard",
+  "signature": "def regex_matching(s, p):",
+  "statement": "Return True if the pattern `p` matches the whole string `s`, otherwise False. In the\npattern, `.` matches any single character and `x*` matches zero or more copies of\nthe element `x` just before it (a letter or `.`). `s` holds lowercase letters; `p` is\na valid pattern of lowercase letters, `.` and `*`. Do not use the `re` module.",
+  "entry": "regex_matching",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `regex_matching` exactly as given; the tests call it.\ndef regex_matching(s, p):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     "aa",
+     "a"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "aa",
+     "a*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "ab",
+     ".*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "aab",
+     "c*a*b"
+    ],
+    "expected": true
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     "",
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "",
+     "a*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "",
+     "."
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "mississippi",
+     "mis*is*p*."
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "mississippi",
+     "mis*is*ip*."
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "ab",
+     ".*c"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "aaa",
+     "a*a"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "aaa",
+     "ab*a*c*a"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "a",
+     "ab*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "bbbba",
+     ".*a*a"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "aaabbb",
+     ""
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "babb",
+     "b.*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "bbbba",
+     "a"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "",
+     ".b*"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "",
+     "b"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "bbbab",
+     "b*"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "bab",
+     "a*"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "baaa",
+     ".*"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "abbaaa",
+     "a*ba.*"
+    ],
+    "expected": false
+   }
+  ]
+ },
+ {
+  "id": "merge_k_sorted",
+  "title": "Merge K Sorted Lists",
+  "difficulty": "hard",
+  "signature": "def merge_k_sorted(lists):",
+  "statement": "`lists` is a list of integer lists, each sorted in non-decreasing order. Return one\nlist with all their elements in non-decreasing order. `lists` may be empty and may\ncontain empty lists.",
+  "entry": "merge_k_sorted",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `merge_k_sorted` exactly as given; the tests call it.\ndef merge_k_sorted(lists):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      [
+       1,
+       4,
+       5
+      ],
+      [
+       1,
+       3,
+       4
+      ],
+      [
+       2,
+       6
+      ]
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     2,
+     3,
+     4,
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      []
+     ]
+    ],
+    "expected": []
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      [
+       1
+      ]
+     ]
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      [],
+      [
+       1
+      ],
+      []
+     ]
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       2,
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       5
+      ],
+      [
+       4
+      ],
+      [
+       3
+      ],
+      [
+       2
+      ],
+      [
+       1
+      ]
+     ]
+    ],
+    "expected": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       -2,
+       -1
+      ],
+      [
+       -3
+      ],
+      [
+       0,
+       0
+      ]
+     ]
+    ],
+    "expected": [
+     -3,
+     -2,
+     -1,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       1,
+       1
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       1
+      ]
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       -8,
+       0
+      ]
+     ]
+    ],
+    "expected": [
+     -8,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       0,
+       6
+      ],
+      [
+       -9,
+       0,
+       3
+      ],
+      [
+       -6,
+       -1
+      ]
+     ]
+    ],
+    "expected": [
+     -9,
+     -6,
+     -1,
+     0,
+     0,
+     3,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       -9
+      ],
+      [],
+      [
+       -6,
+       -3,
+       -2,
+       3
+      ],
+      [
+       -7,
+       -3,
+       -1
+      ],
+      [
+       2,
+       3
+      ]
+     ]
+    ],
+    "expected": [
+     -9,
+     -7,
+     -6,
+     -3,
+     -3,
+     -2,
+     -1,
+     2,
+     3,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       -5,
+       2,
+       4,
+       8
+      ],
+      [
+       -7,
+       -7,
+       4,
+       7,
+       8
+      ]
+     ]
+    ],
+    "expected": [
+     -7,
+     -7,
+     -5,
+     2,
+     4,
+     4,
+     7,
+     8,
+     8
+    ]
+   },
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      [
+       -6,
+       4,
+       5
+      ]
+     ]
+    ],
+    "expected": [
+     -6,
+     4,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      [
+       -7
+      ],
+      [
+       -8,
+       -5,
+       -4,
+       1
+      ],
+      [
+       -6,
+       -5,
+       -3,
+       4,
+       9
+      ],
+      [
+       -3,
+       3
+      ],
+      [
+       -9,
+       -8,
+       7,
+       8
+      ]
+     ]
+    ],
+    "expected": [
+     -9,
+     -8,
+     -8,
+     -7,
+     -6,
+     -5,
+     -5,
+     -4,
+     -3,
+     -3,
+     1,
+     3,
+     4,
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "args": [
+     [
+      []
+     ]
+    ],
+    "expected": []
+   }
+  ]
+ },
+ {
+  "id": "sliding_window_max",
+  "title": "Sliding Window Maximum",
+  "difficulty": "hard",
+  "signature": "def sliding_window_max(nums, k):",
+  "statement": "A window of size `k` slides across the list `nums` one position at a time\n(1 <= k <= len(nums)). Return a list with the largest value of each window, from\nthe leftmost window to the rightmost.",
+  "entry": "sliding_window_max",
+  "kind": "function",
+  "comparator": "exact",
+  "stub": "# Keep the name `sliding_window_max` exactly as given; the tests call it.\ndef sliding_window_max(nums, k):\n    pass  # TODO: write your solution\n",
+  "visible_tests": [
+   {
+    "args": [
+     [
+      1,
+      3,
+      -1,
+      -3,
+      5,
+      3,
+      6,
+      7
+     ],
+     3
+    ],
+    "expected": [
+     3,
+     3,
+     5,
+     5,
+     6,
+     7
+    ]
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     1
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      9,
+      8,
+      7
+     ],
+     2
+    ],
+    "expected": [
+     9,
+     8
+    ]
+   }
+  ],
+  "hidden_tests": [
+   {
+    "args": [
+     [
+      1,
+      -1
+     ],
+     1
+    ],
+    "expected": [
+     1,
+     -1
+    ]
+   },
+   {
+    "args": [
+     [
+      7,
+      2,
+      4
+     ],
+     2
+    ],
+    "expected": [
+     7,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     5
+    ],
+    "expected": [
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      5,
+      4,
+      3,
+      2,
+      1
+     ],
+     3
+    ],
+    "expected": [
+     5,
+     4,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      3,
+      1,
+      2,
+      0,
+      5
+     ],
+     3
+    ],
+    "expected": [
+     3,
+     3,
+     2,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      4,
+      4,
+      4
+     ],
+     2
+    ],
+    "expected": [
+     4,
+     4,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      7,
+      1,
+      4,
+      0,
+      5,
+      9,
+      -1
+     ],
+     6
+    ],
+    "expected": [
+     9,
+     9
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      0,
+      -7,
+      -1,
+      5,
+      -1,
+      -1,
+      -8
+     ],
+     6
+    ],
+    "expected": [
+     5,
+     5,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      6,
+      6,
+      -4,
+      9,
+      4,
+      8
+     ],
+     1
+    ],
+    "expected": [
+     6,
+     6,
+     -4,
+     9,
+     4,
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      -6,
+      -1,
+      4,
+      1,
+      1,
+      8,
+      -6,
+      0,
+      0,
+      1
+     ],
+     10
+    ],
+    "expected": [
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      -4,
+      -3,
+      3,
+      8
+     ],
+     4
+    ],
+    "expected": [
+     3,
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      7,
+      2,
+      8,
+      3,
+      -7,
+      -4,
+      -7,
+      3,
+      5,
+      5
+     ],
+     6
+    ],
+    "expected": [
+     8,
+     8,
+     8,
+     5,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      9,
+      -7,
+      -7,
+      8,
+      5,
+      3
+     ],
+     2
+    ],
+    "expected": [
+     9,
+     -7,
+     8,
+     8,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      5,
+      8,
+      4,
+      -5,
+      -5,
+      -6
+     ],
+     1
+    ],
+    "expected": [
+     5,
+     8,
+     4,
+     -5,
+     -5,
+     -6
+    ]
+   },
+   {
+    "args": [
+     [
+      -6,
+      -6,
+      -9,
+      -7
+     ],
+     1
+    ],
+    "expected": [
+     -6,
+     -6,
+     -9,
+     -7
+    ]
+   }
+  ]
+ }
+]

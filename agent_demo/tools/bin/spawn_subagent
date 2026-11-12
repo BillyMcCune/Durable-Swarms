@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "${AGENT_DEMO_PYTHON:-python3}" -m agent_demo.tools spawn_subagent "$@"

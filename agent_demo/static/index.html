@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Durable Swarms · Agent demo</title>
+  <link rel="stylesheet" href="/demo.css"><script src="/demo.js" defer></script>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">DS<span>Durable Swarms · live coding agents</span></a>
+    <div id="connection" role="status">Connecting…</div>
+  </header>
+  <main>
+    <div id="error" role="alert" hidden></div>
+    <section id="metrics" class="metrics" aria-label="Summary"></section>
+
+    <section class="panel scenarios">
+      <div class="panel-head"><h2>Scenarios</h2>
+        <span>Start any of them at any time, in any order. The orchestrator is never told what you did; the panel that opens shows each step as it really happens.</span></div>
+      <div id="scenario-cards" class="scenario-cards"></div>
+      <button id="drill-reopen" class="ghost" type="button" hidden>Show the last walkthrough again</button>
+    </section>
+
+    <section class="panel" id="live">
+      <div class="panel-head"><h2>Live system</h2><div id="flow-legend" class="legend flow-legend"></div>
+        <button id="stop-all" class="danger" type="button" disabled>Stop &amp; clear all</button></div>
+      <div id="topology" class="topology">
+        <svg id="wires" aria-hidden="true"></svg>
+        <div class="zone laptop">
+          <span class="zone-label">YOUR LAPTOP</span>
+          <div class="node model" id="node-model"></div>
+          <div class="node orch" id="node-orch"></div>
+          <div class="node store" id="node-log"></div>
+        </div>
+        <div class="wire-gap"></div>
+        <div class="zone pool">
+          <span class="zone-label">VM POOL · every model turn is a request back to the laptop</span>
+          <div id="vms" class="vm-grid"></div>
+        </div>
+        <div class="wire-gap short"></div>
+        <div class="zone agents">
+          <span class="zone-label">AGENTS · each line leads to the VM slot the agent is running in</span>
+          <div id="agent-layer" class="agent-layer"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="columns">
+      <section class="panel">
+        <div class="panel-head"><h2>Agent details</h2><span id="agent-count"></span></div>
+        <div id="legend" class="legend"></div>
+        <div id="tasks"><p class="empty">No agents yet. Launch some on the right.</p></div>
+      </section>
+      <div class="side">
+        <section class="panel">
+          <div class="panel-head"><h2>Launch tasks</h2></div>
+          <form id="launch">
+            <div class="row">
+              <label>Tasks<input id="launch-count" type="number" min="1" max="12" value="1" required></label>
+              <label>First seed<input id="launch-seed" type="number" value="1" required></label>
+            </div>
+            <label>Run name<input id="launch-name" maxlength="40" value="demo" required></label>
+            <label>Model<input id="launch-model" maxlength="80" placeholder="orchestrator default"></label>
+            <label>Operator instructions (optional)<input id="launch-instructions" maxlength="500" placeholder="extra guidance for each lead agent"></label>
+            <button type="submit">Launch</button>
+            <p id="launch-result" class="hint" role="status" aria-live="polite">Each task (Alice, Bob, …) gets a lead agent and 10 problems: 4 easy, 4 medium, 2 hard.</p>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h2>Recovery timeline</h2><span>Durable events</span></div>
+          <div id="events" class="events"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <aside id="drill" class="drill" hidden aria-label="Scenario walkthrough">
+    <div class="drawer-head">
+      <div><p class="eyebrow">SCENARIO WALKTHROUGH</p><h2 id="drill-title"></h2><p id="drill-sub" class="hint"></p></div>
+      <button id="drill-close" class="ghost" type="button">Close</button>
+    </div>
+    <p id="drill-shows" class="drill-shows" hidden></p>
+    <div id="drill-recent" class="drill-recent" hidden></div>
+    <div id="drill-body" class="drill-body"></div>
+  </aside>
+
+  <aside id="drawer" class="drawer" hidden aria-label="Agent trajectory">
+    <div class="drawer-head">
+      <div><p class="eyebrow">AGENT TRAJECTORY</p><h2 id="drawer-title"></h2><p id="drawer-sub" class="hint"></p></div>
+      <button id="drawer-close" class="ghost" type="button">Close</button>
+    </div>
+    <div id="drawer-body" class="drawer-body"></div>
+  </aside>
+</body>
+</html>
